@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracciamento Medicine Nonno</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Tracciamento Medicine</h1>
+        <div class="medicine-item">
+            <h2>Medicina A</h2>
+            <p>Quantità rimanente: <span id="medA-quantity">14</span> pillole</p>
+            <button onclick="decrementQuantity('medA')">Prendi</button>
+            <div id="medA-alert" class="alert-message"></div>
+        </div>
+
+        <div class="medicine-item">
+            <h2>Medicina B</h2>
+            <p>Quantità rimanente: <span id="medB-quantity">7</span> pillole</p>
+            <button onclick="decrementQuantity('medB')">Prendi</button>
+            <div id="medB-alert" class="alert-message"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
