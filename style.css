@@ -1,0 +1,38 @@
+body {
+    font-family: sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.medicine-item {
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+}
+.medicine-item:last-child {
+    border-bottom: none;
+}
+button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #0056b3;
+}
+.alert-message {
+    margin-top: 10px;
+    color: red;
+    font-weight: bold;
+}
