@@ -285,6 +285,8 @@
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
+            width: 100%;
+            max-width: 900px;
         }
         
         .ai-card {
@@ -298,6 +300,7 @@
             transform: translateY(20px);
             transition: all 0.8s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
         }
 
         .ai-card.active {
@@ -333,6 +336,35 @@
         @keyframes fadeInOut {
             0%, 100% { opacity: 0; }
             50% { opacity: 1; }
+        }
+
+        .ai-details-container {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            transition: all 0.5s ease;
+        }
+        
+        .ai-details-content {
+            display: none;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: left;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .ai-details-content.show {
+            display: block;
+            opacity: 1;
+        }
+        
+        .ai-details-content canvas {
+            max-width: 100%;
+            height: auto;
         }
 
         /* Sezione Bilancio migliorata */
@@ -407,10 +439,10 @@
         </div>
         <nav class="nav">
             <a href="#score">Score</a>
-            <a href="#benefits">Benefici</a>
             <a href="#blockchain">Trasparenza</a>
             <a href="#ai">Analisi AI</a>
             <a href="#bilancio">Bilancio</a>
+            <a href="#benefits">Benefici</a>
         </nav>
     </header>
 
@@ -444,6 +476,79 @@
                 </div>
             </div>
             <p class="score-description">Un punteggio dinamico che certifica l'integrità della tua azienda, basato su un'analisi multidimensionale.</p>
+        </section>
+
+        <section id="blockchain" class="section">
+            <h2>Trasparenza Immutabile.</h2>
+            <p>Ogni passo della tua filiera, un blocco di fiducia.</p>
+            <div class="blockchain-animation">
+                </div>
+        </section>
+
+        <section id="ai" class="section dark-section">
+            <h2>Analisi Predittiva. L'AI che Vede nel Futuro.</h2>
+            <p>Il nostro algoritmo scansiona miliardi di dati in tempo reale per identificare e neutralizzare rischi prima che diventino un problema.</p>
+            <div id="ai-container">
+                <div class="ai-dashboard">
+                    <div class="ai-card" id="geo-card" style="animation-delay: 0.2s;">
+                        <h4>Rischio Geopolitico</h4>
+                        <div class="score" id="geoScore"></div>
+                        <div class="status" id="geoStatus"></div>
+                    </div>
+                    <div class="ai-card" id="reputation-card" style="animation-delay: 0.4s;">
+                        <h4>Rischio Reputazionale</h4>
+                        <div class="score" id="reputationScore"></div>
+                        <div class="status" id="reputationStatus"></div>
+                    </div>
+                    <div class="ai-card" id="sustainability-card" style="animation-delay: 0.6s;">
+                        <h4>Rischio di Sostenibilità</h4>
+                        <div class="score" id="sustainabilityScore"></div>
+                        <div class="status" id="sustainabilityStatus"></div>
+                    </div>
+                </div>
+                <div class="ai-details-container">
+                    <div class="ai-details-content" id="geo-details">
+                        <h4>Mappa del Rischio Geopolitico</h4>
+                        <p>Il nostro sistema ha identificato delle tensioni in <span style="color: #F44336; font-weight: bold;">tre aree geografiche</span> con cui i tuoi fornitori diretti e indiretti interagiscono. Il rischio è valutato alto, ma gestibile con una diversificazione strategica della catena di fornitura.</p>
+                        <canvas id="geoChart"></canvas>
+                    </div>
+                    <div class="ai-details-content" id="reputation-details">
+                        <h4>Analisi del Sentiment Online</h4>
+                        <p>Il sentiment nei confronti del tuo brand è stabile, ma una recente campagna diffamatoria online ha causato un picco negativo temporaneo. Il nostro algoritmo ha isolato la fonte e suggerisce una strategia di comunicazione mirata per ripristinare il valore reputazionale.</p>
+                        <canvas id="reputationChart"></canvas>
+                    </div>
+                    <div class="ai-details-content" id="sustainability-details">
+                        <h4>Performance di Sostenibilità</h4>
+                        <p>Le tue pratiche di produzione mostrano un'alta efficienza idrica, ma il consumo energetico è superiore alla media del settore. L'algoritmo suggerisce un potenziale di risparmio del 15% con l'adozione di nuove tecnologie rinnovabili.</p>
+                        <canvas id="sustainabilityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="bilancio" class="section">
+            <h2>Salute Finanziaria & Integrità Legale.</h2>
+            <p>Una solida governance non è solo etica, è anche un vantaggio competitivo che si riflette nei bilanci.</p>
+            <div class="balance-container">
+                <div class="balance-info">
+                    <h3>Indicatori e Interpretazione</h3>
+                    <p>La nostra analisi incrocia il **LegalScore** con gli indicatori di bilancio per fornire una visione completa della solidità aziendale.</p>
+                    <div class="indicator-data">
+                        <p><strong>ROE:</strong> <span class="indicator-value roe">0%</span></p>
+                        <p><strong>ROI:</strong> <span class="indicator-value roi">0%</span></p>
+                        <p><strong>D/E Ratio:</strong> <span class="indicator-value de-ratio">0%</span></p>
+                        <p class="analysis-comment">Un alto LegalScore (<span class="score-percent">95%</span>) è correlato a un'elevata redditività del capitale (ROE) e a una gestione efficiente del debito (D/E Ratio), dimostrando la solidità e l'affidabilità dell'azienda.</p>
+                    </div>
+                </div>
+                <div class="balance-charts">
+                    <div class="chart-box">
+                        <canvas id="balanceBarChart"></canvas>
+                    </div>
+                    <div class="chart-box" style="animation-delay: 0.3s;">
+                        <canvas id="balanceLineChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <section id="benefits" class="advantages-section">
@@ -516,62 +621,6 @@
             </div>
         </section>
 
-        <section id="blockchain" class="section">
-            <h2>Trasparenza Immutabile.</h2>
-            <p>Ogni passo della tua filiera, un blocco di fiducia.</p>
-            <div class="blockchain-animation">
-                </div>
-        </section>
-
-        <section id="ai" class="section dark-section">
-            <h2>Analisi Predittiva. L'AI che Vede nel Futuro.</h2>
-            <p>Il nostro algoritmo scansiona miliardi di dati in tempo reale per identificare e neutralizzare rischi prima che diventino un problema.</p>
-            <div id="ai-container">
-                <div class="ai-dashboard">
-                    <div class="ai-card" style="animation-delay: 0.2s;">
-                        <h4>Rischio Geopolitico</h4>
-                        <div class="score" id="geoScore"></div>
-                        <div class="status" id="geoStatus"></div>
-                    </div>
-                    <div class="ai-card" style="animation-delay: 0.4s;">
-                        <h4>Rischio Reputazionale</h4>
-                        <div class="score" id="reputationScore"></div>
-                        <div class="status" id="reputationStatus"></div>
-                    </div>
-                    <div class="ai-card" style="animation-delay: 0.6s;">
-                        <h4>Rischio di Sostenibilità</h4>
-                        <div class="score" id="sustainabilityScore"></div>
-                        <div class="status" id="sustainabilityStatus"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="bilancio" class="section">
-            <h2>Salute Finanziaria & Integrità Legale.</h2>
-            <p>Una solida governance non è solo etica, è anche un vantaggio competitivo che si riflette nei bilanci.</p>
-            <div class="balance-container">
-                <div class="balance-info">
-                    <h3>Indicatori e Interpretazione</h3>
-                    <p>La nostra analisi incrocia il **LegalScore** con gli indicatori di bilancio per fornire una visione completa della solidità aziendale.</p>
-                    <div class="indicator-data">
-                        <p><strong>ROE:</strong> <span class="indicator-value roe">0%</span></p>
-                        <p><strong>ROI:</strong> <span class="indicator-value roi">0%</span></p>
-                        <p><strong>D/E Ratio:</strong> <span class="indicator-value de-ratio">0%</span></p>
-                        <p class="analysis-comment">Un alto LegalScore (<span class="score-percent">95%</span>) è correlato a un'elevata redditività del capitale (ROE) e a una gestione efficiente del debito (D/E Ratio), dimostrando la solidità e l'affidabilità dell'azienda.</p>
-                    </div>
-                </div>
-                <div class="balance-charts">
-                    <div class="chart-box">
-                        <canvas id="balanceBarChart"></canvas>
-                    </div>
-                    <div class="chart-box" style="animation-delay: 0.3s;">
-                        <canvas id="balanceLineChart"></canvas>
-                    </div>
-                </div>
-            </div>
-        </section>
-
     </main>
     
     <button onclick="scrollToTop()" id="scrollToTopBtn" title="Torna su">&#8593;</button>
@@ -593,28 +642,14 @@
                         } else if (entry.target.id === 'bilancio') {
                             animateBalanceAnalysis();
                         }
-                        // Non disattivare l'observer per il bilancio, ma per i suoi chart-box
-                        if (entry.target.id !== 'bilancio') {
-                             observer.unobserve(entry.target);
-                        }
                     }
                 });
             }, { threshold: 0.5 });
             
-            const chartObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    }
-                });
-            }, { threshold: 0.5 });
-
             observer.observe(document.getElementById('score'));
             observer.observe(document.getElementById('blockchain'));
             observer.observe(document.getElementById('ai'));
             observer.observe(document.getElementById('bilancio'));
-            chartObserver.observe(document.querySelector('#bilancio .chart-box:nth-child(1)'));
-            chartObserver.observe(document.querySelector('#bilancio .chart-box:nth-child(2)'));
             
             // Pulsante torna su
             const scrollToTopBtn = document.getElementById("scrollToTopBtn");
@@ -732,51 +767,125 @@
             }
             
             function animateAI() {
-                const geoScoreEl = document.getElementById('geoScore');
-                const reputationScoreEl = document.getElementById('reputationScore');
-                const sustainabilityScoreEl = document.getElementById('sustainabilityScore');
-                const geoStatusEl = document.getElementById('geoStatus');
-                const reputationStatusEl = document.getElementById('reputationStatus');
-                const sustainabilityStatusEl = document.getElementById('sustainabilityStatus');
+                const geoCard = document.getElementById('geo-card');
+                const reputationCard = document.getElementById('reputation-card');
+                const sustainabilityCard = document.getElementById('sustainability-card');
+
+                const cards = [
+                    { id: 'geo', el: geoCard, scoreEl: document.getElementById('geoScore'), statusEl: document.getElementById('geoStatus'), detailsEl: document.getElementById('geo-details'), data: { score: 15, status: 'Basso', color: '#4CAF50' } },
+                    { id: 'reputation', el: reputationCard, scoreEl: document.getElementById('reputationScore'), statusEl: document.getElementById('reputationStatus'), detailsEl: document.getElementById('reputation-details'), data: { score: 65, status: 'Medio', color: '#FFC107' } },
+                    { id: 'sustainability', el: sustainabilityCard, scoreEl: document.getElementById('sustainabilityScore'), statusEl: document.getElementById('sustainabilityStatus'), detailsEl: document.getElementById('sustainability-details'), data: { score: 90, status: 'Alto', color: '#F44336' } }
+                ];
                 
-                const geoCards = document.querySelector('.ai-card:nth-child(1)');
-                const repCards = document.querySelector('.ai-card:nth-child(2)');
-                const susCards = document.querySelector('.ai-card:nth-child(3)');
-
-                const data = {
-                    geo: { score: 15, status: 'Basso', color: '#4CAF50' },
-                    reputation: { score: 65, status: 'Medio', color: '#FFC107' },
-                    sustainability: { score: 90, status: 'Alto', color: '#F44336' }
-                };
-
-                function updateScore(element, value, statusEl, statusText, color) {
-                    let current = 0;
-                    const interval = setInterval(() => {
-                        if (current >= value) {
-                            clearInterval(interval);
-                            element.textContent = value;
-                            statusEl.textContent = statusText;
-                            element.style.color = color;
-                        } else {
-                            current += 5;
-                            element.textContent = current;
+                cards.forEach(card => {
+                    card.el.addEventListener('click', () => {
+                        cards.forEach(c => c.detailsEl.classList.remove('show'));
+                        card.detailsEl.classList.add('show');
+                        
+                        if (card.id === 'geo' && !window.geoChart) {
+                            initGeoChart();
+                        } else if (card.id === 'reputation' && !window.reputationChart) {
+                            initReputationChart();
+                        } else if (card.id === 'sustainability' && !window.sustainabilityChart) {
+                            initSustainabilityChart();
                         }
-                    }, 50);
-                }
-
-                geoCards.classList.add('active');
-                setTimeout(() => {
-                    updateScore(geoScoreEl, data.geo.score, geoStatusEl, data.geo.status, data.geo.color);
-                    repCards.classList.add('active');
+                    });
+                });
+                
+                // Animazione iniziale
+                cards.forEach((card, index) => {
                     setTimeout(() => {
-                        updateScore(reputationScoreEl, data.reputation.score, reputationStatusEl, data.reputation.status, data.reputation.color);
-                        susCards.classList.add('active');
-                        setTimeout(() => {
-                            updateScore(sustainabilityScoreEl, data.sustainability.score, sustainabilityStatusEl, data.sustainability.status, data.sustainability.color);
-                        }, 500);
-                    }, 500);
-                }, 500);
+                        card.el.classList.add('active');
+                        updateScore(card.scoreEl, card.data.score, card.statusEl, card.data.status, card.data.color);
+                    }, 500 * (index + 1));
+                });
             }
+            
+            function updateScore(element, value, statusEl, statusText, color) {
+                let current = 0;
+                const interval = setInterval(() => {
+                    current += 5;
+                    if (current >= value) {
+                        clearInterval(interval);
+                        element.textContent = value;
+                        statusEl.textContent = statusText;
+                        element.style.color = color;
+                    } else {
+                        element.textContent = current;
+                    }
+                }, 50);
+            }
+            
+            function initGeoChart() {
+                const ctx = document.getElementById('geoChart').getContext('2d');
+                window.geoChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Stabilità Politica', 'Regolamentazione', 'Calamità Naturali', 'Tensioni Sociali'],
+                        datasets: [{
+                            label: 'Livello di Rischio',
+                            data: [1, 2, 3, 4],
+                            backgroundColor: 'rgba(244, 67, 54, 0.2)',
+                            borderColor: '#F44336',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: { r: { max: 5, min: 0 } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            function initReputationChart() {
+                const ctx = document.getElementById('reputationChart').getContext('2d');
+                window.reputationChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu'],
+                        datasets: [{
+                            label: 'Sentiment Score',
+                            data: [75, 80, 78, 60, 65, 70],
+                            borderColor: '#FFC107',
+                            tension: 0.4,
+                            fill: false
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: { y: { min: 50, max: 90 } },
+                        plugins: { legend: { display: false } }
+                    }
+                });
+            }
+
+            function initSustainabilityChart() {
+                const ctx = document.getElementById('sustainabilityChart').getContext('2d');
+                window.sustainabilityChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Consumo Energetico', 'Efficienza Idrica', 'Emissioni'],
+                        datasets: [
+                            {
+                                label: 'La tua Azienda',
+                                data: [85, 95, 70],
+                                backgroundColor: '#4CAF50',
+                            },
+                            {
+                                label: 'Media del Settore',
+                                data: [70, 80, 75],
+                                backgroundColor: '#3b5998',
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: { y: { min: 0, max: 100 } }
+                    }
+                });
+            }
+
 
             function animateBalanceAnalysis() {
                 const roeElement = document.querySelector('.indicator-value.roe');
@@ -801,6 +910,11 @@
                 animateValue(roeElement, 15);
                 animateValue(roiElement, 12);
                 animateValue(deElement, 40);
+
+                const chartBox1 = document.querySelector('#bilancio .chart-box:nth-child(1)');
+                const chartBox2 = document.querySelector('#bilancio .chart-box:nth-child(2)');
+                chartBox1.classList.add('active');
+                chartBox2.classList.add('active');
                 
                 // Grafico a Barre
                 const barCtx = document.getElementById('balanceBarChart').getContext('2d');
