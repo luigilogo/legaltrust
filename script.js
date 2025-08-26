@@ -1,49 +1,79 @@
-document.addEventListener('DOMContentLoaded', (event) => {
-    // Carica i dati salvati o usa quelli iniziali
-    loadData();
+// Animazione del Punteggio Dinamico
+document.addEventListener('DOMContentLoaded', () => {
+    const scoreElement = document.getElementById('legalScore');
+    const scoreValueElement = scoreElement.querySelector('.score-value');
+    const finalScore = parseInt(scoreElement.dataset.score, 10);
+    const duration = 2000; // 2 secondi
+    let startTimestamp = null;
+
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        scoreValueElement.textContent = Math.floor(progress * finalScore);
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+
+    window.requestAnimationFrame(step);
 });
 
-function loadData() {
-    ['medA', 'medB'].forEach(medId => {
-        let quantity = localStorage.getItem(medId + '-quantity');
-        if (quantity === null) {
-            // Se non ci sono dati, usa i valori iniziali dal DOM
-            quantity = document.getElementById(medId + '-quantity').textContent;
-            localStorage.setItem(medId + '-quantity', quantity);
+// Animazione della Blockchain
+const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.5 // Attiva quando il 50% dell'elemento è visibile
+};
+
+const blockchainObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const nodes = entry.target.querySelectorAll('.block-node');
+            let delay = 0;
+            nodes.forEach((node, index) => {
+                setTimeout(() => {
+                    node.classList.add('active');
+                }, delay);
+                delay += 500;
+            });
+            observer.unobserve(entry.target); // Ferma l'osservazione dopo l'animazione
         }
-        document.getElementById(medId + '-quantity').textContent = quantity;
-        checkAlert(medId);
     });
+}, observerOptions);
+
+const blockchainSection = document.getElementById('blockchain');
+if (blockchainSection) {
+    blockchainObserver.observe(blockchainSection);
 }
 
-function decrementQuantity(medId) {
-    let quantitySpan = document.getElementById(medId + '-quantity');
-    let currentQuantity = parseInt(quantitySpan.textContent);
-
-    if (currentQuantity > 0) {
-        currentQuantity--;
-        quantitySpan.textContent = currentQuantity;
-        localStorage.setItem(medId + '-quantity', currentQuantity);
-        checkAlert(medId);
+// Grafico Interattivo per l'Analisi AI
+const ctx = document.getElementById('riskChart').getContext('2d');
+const riskChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ['Basso Rischio', 'Rischio Medio', 'Alto Rischio'],
+        datasets: [{
+            label: 'Distribuzione Rischio Fornitori',
+            data: [75, 23, 2], // Dati fittizi: 75% Basso, 23% Medio, 2% Alto
+            backgroundColor: [
+                '#4bc0c0',
+                '#ffcd56',
+                '#ff6384'
+            ],
+            hoverOffset: 4
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false // Nasconde la legenda predefinita, usiamo quella HTML
+            }
+        },
+        cutout: '80%',
+        animation: {
+            animateRotate: true,
+            animateScale: true
+        }
     }
-}
-
-function checkAlert(medId) {
-    let quantitySpan = document.getElementById(medId + '-quantity');
-    let currentQuantity = parseInt(quantitySpan.textContent);
-    let alertMessage = document.getElementById(medId + '-alert');
-
-    // Soglia di avviso: 5 pillole
-    if (currentQuantity <= 5) {
-        alertMessage.textContent = "ATTENZIONE: Le scorte stanno per finire!";
-    } else {
-        alertMessage.textContent = "";
-    }
-
-    // Questo è il punto chiave per la Fase 3
-    if (currentQuantity <= 5) {
-        document.body.classList.add('low-stock');
-    } else {
-        document.body.classList.remove('low-stock');
-    }
-}
+});
