@@ -81,20 +81,26 @@ function animateBlockchain() {
 
         setTimeout(() => {
             node.classList.add('active');
-        }, index * 500); // Ritardo per l'animazione in sequenza
+        }, index * 500);
     });
 }
 
-// Funzione per il grafico dell'AI (migliorato)
-function drawRiskChart() {
+// Funzione per animare il grafico dell'IA e simulare l'analisi dei dati
+function animateRiskAnalysis() {
     const ctx = document.getElementById('riskChart').getContext('2d');
+    const riskData = [
+        { label: 'Basso Rischio', value: 75, color: '#4bc0c0' },
+        { label: 'Rischio Medio', value: 23, color: '#ffcd56' },
+        { label: 'Alto Rischio', value: 2, color: '#ff6384' }
+    ];
+
     const riskChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Basso Rischio', 'Rischio Medio', 'Alto Rischio'],
+            labels: riskData.map(d => d.label),
             datasets: [{
-                data: [75, 23, 2],
-                backgroundColor: ['#4bc0c0', '#ffcd56', '#ff6384'],
+                data: riskData.map(d => d.value),
+                backgroundColor: riskData.map(d => d.color),
                 hoverOffset: 4
             }]
         },
@@ -111,6 +117,19 @@ function drawRiskChart() {
             }
         }
     });
+
+    // Simulazione del dettaglio dell'analisi
+    setTimeout(() => {
+        const infoContainer = document.querySelector('.risk-info');
+        infoContainer.innerHTML = `
+            <h3>Analisi Approfondita</h3>
+            <p>Il nostro algoritmo ha identificato <strong>2 fornitori</strong> ad alto rischio:</p>
+            <ul class="risk-list">
+                <li style="animation-delay: 0s;"><span class="risk-name">Fornitore Alpha</span>: Collegamento a società offshore.</li>
+                <li style="animation-delay: 0.2s;"><span class="risk-name">Fornitore Beta</span>: Transazioni anomale con un'azienda sotto indagine.</li>
+            </ul>
+        `;
+    }, 2500);
 }
 
 // Lanciare le animazioni all'intersezione con l'Observer
@@ -123,12 +142,12 @@ const observer = new IntersectionObserver((entries, observer) => {
             } else if (entry.target.id === 'blockchain') {
                 animateBlockchain();
             } else if (entry.target.id === 'ai') {
-                drawRiskChart();
+                animateRiskAnalysis();
             }
-            observer.unobserve(entry.target); // Ferma l'osservazione
+            observer.unobserve(entry.target);
         }
     });
-}, { threshold: 0.5 }); // Avvia l'animazione quando l'elemento è visibile per il 50%
+}, { threshold: 0.5 });
 
 document.addEventListener('DOMContentLoaded', () => {
     observer.observe(document.getElementById('score'));
