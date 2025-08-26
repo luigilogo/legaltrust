@@ -32,18 +32,52 @@
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
-
+        
+        /* Navbar migliorata */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px 5%;
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
-            box-shadow: var(--shadow-effect);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background 0.3s ease;
+        }
+
+        .header .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .header .logo span {
+            margin-right: 8px;
+            font-size: 1.8rem;
+        }
+
+        .header .nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 25px;
+            padding: 8px 15px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header .nav a:hover {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            box-shadow: 0 5px 15px rgba(59, 89, 152, 0.4);
+            transform: translateY(-2px);
         }
 
         .hero-section {
@@ -252,70 +286,70 @@
             text-align: left;
         }
         
-        #ai-network-container {
-            width: 100%;
-            height: 400px;
+        /* Nuova sezione AI */
+        #ai-dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        
+        .ai-card {
+            background-color: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(5px);
+            padding: 20px;
             border-radius: 10px;
-            position: relative;
-        }
-
-        #ai-network-container #ai-network {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        
-        #ai-text-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #fff;
+            width: 250px;
             text-align: center;
-            font-size: 1.5em;
-            font-weight: 600;
-            animation: fadeInOut 2s infinite;
+            animation: slideIn 0.8s forwards;
+            opacity: 0;
+            transform: translateY(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
-        }
-
-        .risk-list {
-            list-style: none;
-            padding: 0;
-            text-align: left;
-            margin-top: 20px;
-            border-left: 3px solid #ff6384;
-            padding-left: 15px;
-        }
-
-        .risk-list li {
-            margin-bottom: 10px;
-            font-size: 0.9em;
-            opacity: 0;
-            transform: translateY(10px);
-            animation: fade-in-up 0.5s forwards;
-        }
-
-        .risk-name {
+        .ai-card h4 {
             font-weight: 600;
-            color: #ff6384;
+            font-size: 1.1em;
+            margin-top: 0;
+        }
+        
+        .ai-card .score {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        .ai-card .status {
+            font-size: 0.9em;
+            font-style: italic;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes fade-in-up {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .risk-info, .balance-info {
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .balance-charts {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            width: 100%;
+            max-width: 500px;
         }
     </style>
 </head>
 <body>
 
     <header class="header">
-        <div class="logo">LegalTrust</div>
+        <div class="logo">
+            <span>&#9876;</span> LegalTrust
+        </div>
         <nav class="nav">
             <a href="#score">Score</a>
             <a href="#benefits">Benefici</a>
@@ -435,12 +469,23 @@
         </section>
 
         <section id="ai" class="section dark-section">
-            <h2>Intelligenza Artificiale. Zero Punti Ciechi.</h2>
-            <p>La nostra IA analizza miliardi di dati per mappare la tua rete di fornitori e identificare rischi nascosti.</p>
-            <div class="chart-container">
-                <div id="ai-network-container">
-                    <div id="ai-text-overlay">Analisi in corso...</div>
-                    <canvas id="ai-network"></canvas>
+            <h2>Analisi Predittiva. Prevenire è meglio che curare.</h2>
+            <p>Il nostro algoritmo analizza miliardi di dati in tempo reale per identificare e neutralizzare rischi prima che diventino un problema.</p>
+            <div id="ai-dashboard">
+                <div class="ai-card">
+                    <h4>Rischio Geopolitico</h4>
+                    <div class="score" style="color: #4CAF50;">Basso</div>
+                    <div class="status">Monitoraggio costante</div>
+                </div>
+                <div class="ai-card" style="animation-delay: 0.2s;">
+                    <h4>Rischio Reputazionale</h4>
+                    <div class="score" style="color: #FFC107;">Medio</div>
+                    <div class="status">Segnalazioni in aumento</div>
+                </div>
+                <div class="ai-card" style="animation-delay: 0.4s;">
+                    <h4>Rischio Economico</h4>
+                    <div class="score" style="color: #F44336;">Alto</div>
+                    <div class="status">Variazioni anomale di prezzo</div>
                 </div>
             </div>
         </section>
@@ -459,7 +504,10 @@
                         <p class="analysis-comment">Un alto LegalScore (<span class="score-percent">95%</span>) è correlato a un'elevata redditività del capitale (ROE) e a una gestione efficiente del debito (D/E Ratio), dimostrando la solidità e l'affidabilità dell'azienda.</p>
                     </div>
                 </div>
-                <canvas id="balanceChart"></canvas>
+                <div class="balance-charts">
+                    <canvas id="balanceBarChart"></canvas>
+                    <canvas id="balanceLineChart"></canvas>
+                </div>
             </div>
         </section>
 
@@ -477,8 +525,6 @@
                             animateScoreBreakdown();
                         } else if (entry.target.id === 'blockchain') {
                             animateBlockchain();
-                        } else if (entry.target.id === 'ai') {
-                            initAINetwork();
                         } else if (entry.target.id === 'bilancio') {
                             animateBalanceAnalysis();
                         }
@@ -489,8 +535,9 @@
 
             observer.observe(document.getElementById('score'));
             observer.observe(document.getElementById('blockchain'));
-            observer.observe(document.getElementById('ai'));
             observer.observe(document.getElementById('bilancio'));
+            
+            // Per la sezione AI, l'animazione è basata su CSS.
 
             function animateScore(finalScore) {
                 const scoreElement = document.getElementById('legalScoreValue');
@@ -546,7 +593,6 @@
                 
                 bars.forEach((bar, index) => {
                     const score = parseInt(bar.dataset.score, 10);
-                    // Calcola la percentuale di riempimento sulla base del massimo punteggio possibile (100)
                     bar.style.width = `${score}%`; 
                     
                     let current = 0;
@@ -592,146 +638,6 @@
                     }, index * 500);
                 });
             }
-            
-            function initAINetwork() {
-                const sketch = (p) => {
-                    let nodes = [];
-                    let connections = [];
-                    let riskNodes = [];
-                    let riskConnections = [];
-                    let isAnimating = false;
-                    let textOverlay;
-                    let isVisible = false;
-
-                    p.setup = () => {
-                        const container = document.getElementById('ai-network-container');
-                        const canvas = p.createCanvas(container.offsetWidth, 400);
-                        canvas.parent('ai-network');
-                        p.noLoop();
-
-                        textOverlay = document.getElementById('ai-text-overlay');
-
-                        // Posizionamento nodi principali (fittizi)
-                        nodes.push(new Node(p.width / 2, p.height / 2, 'La tua azienda', p.color('#fff')));
-                        nodes.push(new Node(p.width * 0.2, p.height * 0.3, 'Fornitore A', p.color('#4bc0c0')));
-                        nodes.push(new Node(p.width * 0.8, p.height * 0.7, 'Fornitore B', p.color('#ffcd56')));
-                        nodes.push(new Node(p.width * 0.5, p.height * 0.1, 'Fornitore C', p.color('#4bc0c0')));
-                        nodes.push(new Node(p.width * 0.3, p.height * 0.7, 'Fornitore D', p.color('#ff6384'))); // Rischio
-                        nodes.push(new Node(p.width * 0.7, p.height * 0.2, 'Società E', p.color('#ff6384'))); // Rischio
-                        
-                        // Connessioni
-                        connections.push({ from: nodes[0], to: nodes[1] });
-                        connections.push({ from: nodes[0], to: nodes[2] });
-                        connections.push({ from: nodes[0], to: nodes[3] });
-                        connections.push({ from: nodes[0], to: nodes[4] });
-                        connections.push({ from: nodes[4], to: nodes[5] }); // Connessione di rischio tra Fornitore D e Società E
-
-                        const aiSection = document.getElementById('ai');
-                        const aiObserver = new IntersectionObserver((entries) => {
-                            entries.forEach(entry => {
-                                if (entry.isIntersecting && !isVisible) {
-                                    isVisible = true;
-                                    textOverlay.style.display = 'block';
-                                    setTimeout(() => {
-                                        textOverlay.style.display = 'none';
-                                        isAnimating = true;
-                                        p.loop();
-                                    }, 2000);
-
-                                    setTimeout(() => {
-                                        const infoContainer = document.querySelector('#ai .risk-info');
-                                        if (infoContainer) {
-                                            infoContainer.innerHTML = `
-                                                <h3>Analisi Approfondita</h3>
-                                                <p>Il nostro algoritmo ha identificato **1 connessione ad alto rischio**:</p>
-                                                <ul class="risk-list">
-                                                    <li style="animation-delay: 0s;"><span class="risk-name">Fornitore D</span>: Collegato a **Società E**, coinvolta in un'indagine per frode fiscale.</li>
-                                                </ul>
-                                            `;
-                                        }
-                                        riskNodes.push(nodes[4]);
-                                        riskNodes.push(nodes[5]);
-                                        riskConnections.push({ from: nodes[4], to: nodes[5] });
-                                    }, 5000);
-                                    aiObserver.unobserve(aiSection);
-                                }
-                            });
-                        }, { threshold: 0.5 });
-                        aiObserver.observe(aiSection);
-                    };
-
-                    p.draw = () => {
-                        p.background('#222');
-                        
-                        p.strokeWeight(1);
-                        p.stroke(p.color(200, 200, 200, 100));
-                        for (let conn of connections) {
-                            p.line(conn.from.x, conn.from.y, conn.to.x, conn.to.y);
-                        }
-
-                        p.strokeWeight(3);
-                        p.stroke(p.color(255, 0, 0, 200));
-                        for (let conn of riskConnections) {
-                            p.line(conn.from.x, conn.from.y, conn.to.x, conn.to.y);
-                        }
-                        p.noStroke();
-
-                        for (let node of nodes) {
-                            node.display();
-                        }
-
-                        if (isAnimating) {
-                            for (let i = 0; i < nodes.length; i++) {
-                                for (let j = i + 1; j < nodes.length; j++) {
-                                    let d = p.dist(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
-                                    let attract = (p.width * p.height) / (d * d * 100);
-                                    let repel = (nodes[i].size * nodes[j].size) / (d * d * 10);
-                                    let force = attract - repel;
-                                    let dx = nodes[j].x - nodes[i].x;
-                                    let dy = nodes[j].y - nodes[i].y;
-                                    nodes[i].vx += force * dx * 0.001;
-                                    nodes[i].vy += force * dy * 0.001;
-                                    nodes[j].vx -= force * dx * 0.001;
-                                    nodes[j].vy -= force * dy * 0.001;
-                                }
-                                nodes[i].update();
-                            }
-                        }
-                    };
-                    
-                    class Node {
-                        constructor(x, y, label, color) {
-                            this.x = x;
-                            this.y = y;
-                            this.vx = 0;
-                            this.vy = 0;
-                            this.size = 20;
-                            this.label = label;
-                            this.color = color;
-                        }
-
-                        update() {
-                            this.x += this.vx;
-                            this.y += this.vy;
-                            this.vx *= 0.95;
-                            this.vy *= 0.95;
-                            this.x = p.constrain(this.x, 20, p.width - 20);
-                            this.y = p.constrain(this.y, 20, p.height - 20);
-                        }
-
-                        display() {
-                            p.fill(this.color);
-                            p.ellipse(this.x, this.y, this.size);
-                            p.fill(255);
-                            p.textAlign(p.CENTER, p.CENTER);
-                            p.textSize(10);
-                            p.text(this.label, this.x, this.y + this.size / 2 + 5);
-                        }
-                    }
-                };
-                new p5(sketch);
-            }
-
 
             function animateBalanceAnalysis() {
                 const roeElement = document.querySelector('.indicator-value.roe');
@@ -757,42 +663,55 @@
                 animateValue(roiElement, 12);
                 animateValue(deElement, 40);
 
-                const ctx = document.getElementById('balanceChart').getContext('2d');
-                if (window.balanceChart) {
-                    window.balanceChart.destroy();
-                }
-                const data = {
-                    labels: ['Governance', 'LegalScore', 'Performance Finanziaria'],
-                    datasets: [{
-                        label: 'Correlazione',
-                        data: [95, 95, 85],
-                        backgroundColor: [
-                            '#3b5998',
-                            '#4bc0c0',
-                            '#ffcd56'
-                        ],
-                        borderColor: '#fff',
-                        borderWidth: 2
-                    }]
-                };
-
-                window.balanceChart = new Chart(ctx, {
+                // Grafico a Barre
+                const barCtx = document.getElementById('balanceBarChart').getContext('2d');
+                if (window.balanceBarChart) { window.balanceBarChart.destroy(); }
+                window.balanceBarChart = new Chart(barCtx, {
                     type: 'bar',
-                    data: data,
+                    data: {
+                        labels: ['Integrità Legale', 'Redditività (ROE)', 'Redditività (ROI)'],
+                        datasets: [{
+                            label: 'Correlazione con la Performance',
+                            data: [95, 15, 12],
+                            backgroundColor: ['#3b5998', '#4CAF50', '#FFC107'],
+                            borderColor: '#fff',
+                            borderWidth: 1
+                        }]
+                    },
                     options: {
                         responsive: true,
                         plugins: {
                             legend: { display: false },
-                            title: {
-                                display: true,
-                                text: 'Correlazione tra Legalità e Performance'
-                            }
+                            title: { display: true, text: 'Correlazione tra Legalità e Performance' }
                         },
                         scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 100
-                            }
+                            y: { beginAtZero: true, max: 100 }
+                        }
+                    }
+                });
+                
+                // Grafico a Linee
+                const lineCtx = document.getElementById('balanceLineChart').getContext('2d');
+                if (window.balanceLineChart) { window.balanceLineChart.destroy(); }
+                window.balanceLineChart = new Chart(lineCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['2022', '2023', '2024', '2025'],
+                        datasets: [{
+                            label: 'Fatturato (€M)',
+                            data: [5, 7, 9, 12],
+                            fill: false,
+                            borderColor: '#3b5998',
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: true }
+                        },
+                        scales: {
+                            y: { beginAtZero: true }
                         }
                     }
                 });
