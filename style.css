@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #3b5998; /* Un blu più professionale */
+    --primary-color: #3b5998; /* Blu professionale */
     --secondary-color: #f7f7f7;
     --text-color: #333;
     --light-text: #fff;
@@ -7,6 +7,10 @@
     --shadow-effect: 0 10px 30px rgba(0, 0, 0, 0.1);
     --transition-fast: 0.3s ease-in-out;
     --transition-slow: 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+    box-sizing: border-box;
 }
 
 body {
@@ -125,9 +129,16 @@ body {
     animation: pulse 1s infinite alternate;
 }
 
-/* Resto del CSS per le sezioni AI e generiche */
-.section { padding: 80px 5%; text-align: center; }
-.dark-section { background-color: #222; color: var(--light-text); }
+@keyframes pulse {
+    from { transform: scale(1); opacity: 0.7; }
+    to { transform: scale(1.1); opacity: 1; }
+}
+
+/* Sezione AI */
+.dark-section {
+    background-color: #222;
+    color: var(--light-text);
+}
 
 .chart-container {
     max-width: 900px;
@@ -137,8 +148,46 @@ body {
     align-items: center;
     gap: 40px;
 }
-.risk-info { text-align: left; }
-.dot { height: 15px; width: 15px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+
+.risk-info {
+    text-align: left;
+}
+
+.dot {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
 .dot.high { background-color: #ff6384; }
 .dot.medium { background-color: #ffcd56; }
 .dot.low { background-color: #4bc0c0; }
+
+.risk-list {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin-top: 20px;
+    border-left: 3px solid #ff6384;
+    padding-left: 15px;
+}
+
+.risk-list li {
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fade-in-up 0.5s forwards;
+}
+
+.risk-name {
+    font-weight: 600;
+    color: #ff6384;
+}
+
+@keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
