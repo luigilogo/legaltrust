@@ -6,7 +6,6 @@
     <title>LegalTrust | Misura la tua integrità</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <style>
         :root {
             --primary-color: #3b5998;
@@ -234,11 +233,10 @@
             position: relative;
             margin: 50px auto;
         }
-        .blockchain-node {
+        .node {
             position: absolute;
             width: 120px;
             height: 120px;
-            border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(5px);
             box-shadow: 0 0 15px rgba(59, 89, 152, 0.5);
@@ -250,8 +248,15 @@
             transition: all 0.3s ease;
             cursor: pointer;
             border: 2px solid transparent;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.8s ease;
         }
-        .blockchain-node:hover {
+        .node.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .node:hover {
             transform: scale(1.1);
             border-color: #fff;
         }
@@ -277,25 +282,29 @@
             left: 50%;
             transform: translateX(-50%);
         }
-        .blockchain-node:hover .node-tooltip {
+        .node:hover .node-tooltip {
             opacity: 1;
         }
         .line {
             position: absolute;
-            background-color: rgba(255, 255, 255, 0.5);
             height: 2px;
             z-index: -1;
             transform-origin: left center;
+            background-color: #8b9dc3;
+            opacity: 0;
+            animation: none;
+            transition: opacity 0.5s ease, background-color 0.5s ease;
         }
         .line.active {
             animation: pulse-line 1.5s infinite alternate;
+            opacity: 1;
         }
         @keyframes pulse-line {
-            from { background-color: rgba(255, 255, 255, 0.5); }
+            from { background-color: rgba(139, 157, 195, 0.5); }
             to { background-color: #8b9dc3; box-shadow: 0 0 10px #8b9dc3; }
         }
 
-        /* Sezione AI migliorata */
+        /* Sezione AI ripristinata */
         #ai-container {
             display: flex;
             flex-direction: column;
@@ -324,7 +333,7 @@
             transform: translateY(20px);
             transition: all 0.8s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            cursor: pointer;
+            color: #fff;
         }
 
         .ai-card.active {
@@ -347,48 +356,6 @@
         .ai-card .status {
             font-size: 0.9em;
             font-style: italic;
-        }
-        
-        #ai-text-overlay {
-            color: #fff;
-            text-align: center;
-            font-size: 1.5em;
-            font-weight: 600;
-            animation: fadeInOut 2s infinite;
-        }
-
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
-        }
-
-        .ai-details-container {
-            margin-top: 30px;
-            width: 100%;
-            max-width: 900px;
-            text-align: center;
-            transition: all 0.5s ease;
-        }
-        
-        .ai-details-content {
-            display: none;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: left;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        
-        .ai-details-content.show {
-            display: block;
-            opacity: 1;
-        }
-        
-        .ai-details-content canvas {
-            max-width: 100%;
-            height: auto;
         }
 
         /* Sezione Bilancio migliorata */
@@ -514,37 +481,20 @@
             <p>Il nostro algoritmo scansiona miliardi di dati in tempo reale per identificare e neutralizzare rischi prima che diventino un problema.</p>
             <div id="ai-container">
                 <div class="ai-dashboard">
-                    <div class="ai-card" id="geo-card" style="animation-delay: 0.2s;">
+                    <div class="ai-card" style="animation-delay: 0.2s;">
                         <h4>Rischio Geopolitico</h4>
                         <div class="score" id="geoScore"></div>
                         <div class="status" id="geoStatus"></div>
                     </div>
-                    <div class="ai-card" id="reputation-card" style="animation-delay: 0.4s;">
+                    <div class="ai-card" style="animation-delay: 0.4s;">
                         <h4>Rischio Reputazionale</h4>
                         <div class="score" id="reputationScore"></div>
                         <div class="status" id="reputationStatus"></div>
                     </div>
-                    <div class="ai-card" id="sustainability-card" style="animation-delay: 0.6s;">
+                    <div class="ai-card" style="animation-delay: 0.6s;">
                         <h4>Rischio di Sostenibilità</h4>
                         <div class="score" id="sustainabilityScore"></div>
                         <div class="status" id="sustainabilityStatus"></div>
-                    </div>
-                </div>
-                <div class="ai-details-container">
-                    <div class="ai-details-content" id="geo-details">
-                        <h4>Mappa del Rischio Geopolitico</h4>
-                        <p>Il nostro sistema ha identificato delle tensioni in <span style="color: #F44336; font-weight: bold;">tre aree geografiche</span> con cui i tuoi fornitori diretti e indiretti interagiscono. Il rischio è valutato alto, ma gestibile con una diversificazione strategica della catena di fornitura.</p>
-                        <canvas id="geoChart"></canvas>
-                    </div>
-                    <div class="ai-details-content" id="reputation-details">
-                        <h4>Analisi del Sentiment Online</h4>
-                        <p>Il sentiment nei confronti del tuo brand è stabile, ma una recente campagna diffamatoria online ha causato un picco negativo temporaneo. Il nostro algoritmo ha isolato la fonte e suggerisce una strategia di comunicazione mirata per ripristinare il valore reputazionale.</p>
-                        <canvas id="reputationChart"></canvas>
-                    </div>
-                    <div class="ai-details-content" id="sustainability-details">
-                        <h4>Performance di Sostenibilità</h4>
-                        <p>Le tue pratiche di produzione mostrano un'alta efficienza idrica, ma il consumo energetico è superiore alla media del settore. L'algoritmo suggerisce un potenziale di risparmio del 15% con l'adozione di nuove tecnologie rinnovabili.</p>
-                        <canvas id="sustainabilityChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -709,7 +659,7 @@
                 const canvas = document.getElementById('score-canvas');
                 if (!canvas) return;
                 const ctx = canvas.getContext('2d');
-                const finalScore = parseInt(document.getElementById('legalScoreValue').dataset.final-score, 10);
+                const finalScore = parseInt(document.getElementById('legalScoreValue').dataset.finalScore, 10);
                 const radius = canvas.width / 2 - 10;
                 const endAngle = (2 * Math.PI) * (finalScore / 100);
                 let startTimestamp = null;
@@ -759,7 +709,6 @@
                 });
             }
 
-            // Nuova funzione per l'animazione della blockchain
             function animateBlockchain() {
                 const container = document.getElementById('blockchain-container');
                 container.innerHTML = '';
@@ -770,169 +719,96 @@
                     { id: 'node4', icon: '🏛️', label: 'Certificazione', top: '50%', left: '75%', tooltip: 'LegalTrust - Esito: Conforme' }
                 ];
                 
-                function createLine(x1, y1, x2, y2) {
+                function createLine(x1, y1, x2, y2, delay) {
                     const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
                     const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
                     const line = document.createElement('div');
-                    line.className = 'line active';
+                    line.className = 'line';
                     line.style.width = `${length}px`;
                     line.style.top = `${y1}px`;
                     line.style.left = `${x1}px`;
                     line.style.transform = `rotate(${angle}deg)`;
                     container.appendChild(line);
+
+                    setTimeout(() => {
+                        line.classList.add('active');
+                    }, delay);
                 }
 
-                nodesData.forEach(nodeData => {
+                nodesData.forEach((nodeData, index) => {
                     const nodeEl = document.createElement('div');
-                    nodeEl.className = 'blockchain-node';
+                    nodeEl.className = 'node';
                     nodeEl.style.top = nodeData.top;
                     nodeEl.style.left = nodeData.left;
                     nodeEl.innerHTML = `<span class="node-icon">${nodeData.icon}</span><span class="node-label">${nodeData.label}</span><span class="node-tooltip">${nodeData.tooltip}</span>`;
                     container.appendChild(nodeEl);
+                    setTimeout(() => {
+                        nodeEl.classList.add('active');
+                    }, index * 400);
                 });
 
-                // Dati di connessione
                 setTimeout(() => {
-                    const node1 = document.querySelector('#blockchain-container .blockchain-node:nth-child(1)');
-                    const node2 = document.querySelector('#blockchain-container .blockchain-node:nth-child(2)');
-                    const node3 = document.querySelector('#blockchain-container .blockchain-node:nth-child(3)');
-                    const node4 = document.querySelector('#blockchain-container .blockchain-node:nth-child(4)');
-
-                    const pos1 = node1.getBoundingClientRect();
-                    const pos2 = node2.getBoundingClientRect();
-                    const pos3 = node3.getBoundingClientRect();
-                    const pos4 = node4.getBoundingClientRect();
-                    
+                    const nodes = document.querySelectorAll('#blockchain-container .node');
+                    const pos1 = nodes[0].getBoundingClientRect();
+                    const pos2 = nodes[1].getBoundingClientRect();
+                    const pos3 = nodes[2].getBoundingClientRect();
+                    const pos4 = nodes[3].getBoundingClientRect();
                     const containerRect = container.getBoundingClientRect();
+                    
+                    const x = i => nodes[i].offsetLeft + nodes[i].offsetWidth / 2;
+                    const y = i => nodes[i].offsetTop + nodes[i].offsetHeight / 2;
 
-                    createLine(pos1.left - containerRect.left + pos1.width / 2, pos1.top - containerRect.top + pos1.height / 2, pos2.left - containerRect.left + pos2.width / 2, pos2.top - containerRect.top + pos2.height / 2);
-                    createLine(pos2.left - containerRect.left + pos2.width / 2, pos2.top - containerRect.top + pos2.height / 2, pos3.left - containerRect.left + pos3.width / 2, pos3.top - containerRect.top + pos3.height / 2);
-                    createLine(pos3.left - containerRect.left + pos3.width / 2, pos3.top - containerRect.top + pos3.height / 2, pos4.left - containerRect.left + pos4.width / 2, pos4.top - containerRect.top + pos4.height / 2);
+                    createLine(x(0), y(0), x(1), y(1), 500);
+                    createLine(x(1), y(1), x(2), y(2), 1500);
+                    createLine(x(2), y(2), x(3), y(3), 2500);
                 }, 100);
             }
             
             function animateAI() {
-                const geoCard = document.getElementById('geo-card');
-                const reputationCard = document.getElementById('reputation-card');
-                const sustainabilityCard = document.getElementById('sustainability-card');
+                const geoScoreEl = document.getElementById('geoScore');
+                const reputationScoreEl = document.getElementById('reputationScore');
+                const sustainabilityScoreEl = document.getElementById('sustainabilityScore');
+                const geoStatusEl = document.getElementById('geoStatus');
+                const reputationStatusEl = document.getElementById('reputationStatus');
+                const sustainabilityStatusEl = document.getElementById('sustainabilityStatus');
 
-                const cards = [
-                    { id: 'geo', el: geoCard, scoreEl: document.getElementById('geoScore'), statusEl: document.getElementById('geoStatus'), detailsEl: document.getElementById('geo-details'), data: { score: 15, status: 'Basso', color: '#4CAF50' } },
-                    { id: 'reputation', el: reputationCard, scoreEl: document.getElementById('reputationScore'), statusEl: document.getElementById('reputationStatus'), detailsEl: document.getElementById('reputation-details'), data: { score: 65, status: 'Medio', color: '#FFC107' } },
-                    { id: 'sustainability', el: sustainabilityCard, scoreEl: document.getElementById('sustainabilityScore'), statusEl: document.getElementById('sustainabilityStatus'), detailsEl: document.getElementById('sustainability-details'), data: { score: 90, status: 'Alto', color: '#F44336' } }
-                ];
-                
-                cards.forEach(card => {
-                    card.el.addEventListener('click', () => {
-                        cards.forEach(c => c.detailsEl.classList.remove('show'));
-                        card.detailsEl.classList.add('show');
-                        
-                        if (card.id === 'geo' && !window.geoChart) {
-                            initGeoChart();
-                        } else if (card.id === 'reputation' && !window.reputationChart) {
-                            initReputationChart();
-                        } else if (card.id === 'sustainability' && !window.sustainabilityChart) {
-                            initSustainabilityChart();
+                const data = {
+                    geo: { score: 15, status: 'Basso', color: '#4CAF50' },
+                    reputation: { score: 65, status: 'Medio', color: '#FFC107' },
+                    sustainability: { score: 90, status: 'Alto', color: '#F44336' }
+                };
+
+                function updateScore(element, value, statusEl, statusText, color) {
+                    let current = 0;
+                    const interval = setInterval(() => {
+                        if (current >= value) {
+                            clearInterval(interval);
+                            element.textContent = value;
+                            statusEl.textContent = statusText;
+                            element.style.color = color;
+                        } else {
+                            current += 5;
+                            element.textContent = current;
                         }
-                    });
-                });
-                
-                // Animazione iniziale
-                cards.forEach((card, index) => {
+                    }, 50);
+                }
+
+                document.querySelectorAll('.ai-card').forEach((card, index) => {
                     setTimeout(() => {
-                        card.el.classList.add('active');
-                        updateScore(card.scoreEl, card.data.score, card.statusEl, card.data.status, card.data.color);
-                    }, 500 * (index + 1));
+                        card.classList.add('active');
+                    }, index * 500);
                 });
+
+                updateScore(geoScoreEl, data.geo.score, geoStatusEl, data.geo.status, data.geo.color);
+                updateScore(reputationScoreEl, data.reputation.score, reputationStatusEl, data.reputation.status, data.reputation.color);
+                updateScore(sustainabilityScoreEl, data.sustainability.score, sustainabilityStatusEl, data.sustainability.status, data.sustainability.color);
             }
             
-            function updateScore(element, value, statusEl, statusText, color) {
-                let current = 0;
-                const interval = setInterval(() => {
-                    current += 5;
-                    if (current >= value) {
-                        clearInterval(interval);
-                        element.textContent = value;
-                        statusEl.textContent = statusText;
-                        element.style.color = color;
-                    } else {
-                        element.textContent = current;
-                    }
-                }, 50);
-            }
-            
-            function initGeoChart() {
-                const ctx = document.getElementById('geoChart').getContext('2d');
-                window.geoChart = new Chart(ctx, {
-                    type: 'radar',
-                    data: {
-                        labels: ['Stabilità Politica', 'Regolamentazione', 'Calamità Naturali', 'Tensioni Sociali'],
-                        datasets: [{
-                            label: 'Livello di Rischio',
-                            data: [1, 2, 3, 4],
-                            backgroundColor: 'rgba(244, 67, 54, 0.2)',
-                            borderColor: '#F44336',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: { r: { max: 5, min: 0 } },
-                        plugins: { legend: { display: false } }
-                    }
-                });
-            }
-
-            function initReputationChart() {
-                const ctx = document.getElementById('reputationChart').getContext('2d');
-                window.reputationChart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu'],
-                        datasets: [{
-                            label: 'Sentiment Score',
-                            data: [75, 80, 78, 60, 65, 70],
-                            borderColor: '#FFC107',
-                            tension: 0.4,
-                            fill: false
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: { y: { min: 50, max: 90 } },
-                        plugins: { legend: { display: false } }
-                    }
-                });
-            }
-
-            function initSustainabilityChart() {
-                const ctx = document.getElementById('sustainabilityChart').getContext('2d');
-                window.sustainabilityChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Consumo Energetico', 'Efficienza Idrica', 'Emissioni'],
-                        datasets: [
-                            {
-                                label: 'La tua Azienda',
-                                data: [85, 95, 70],
-                                backgroundColor: '#4CAF50',
-                            },
-                            {
-                                label: 'Media del Settore',
-                                data: [70, 80, 75],
-                                backgroundColor: '#3b5998',
-                            }
-                        ]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: { y: { min: 0, max: 100 } }
-                    }
-                });
-            }
-
+            let chartsInitialized = false;
 
             function animateBalanceAnalysis() {
+                if (chartsInitialized) return;
+
                 const roeElement = document.querySelector('.indicator-value.roe');
                 const roiElement = document.querySelector('.indicator-value.roi');
                 const deElement = document.querySelector('.indicator-value.de-ratio');
@@ -1013,6 +889,7 @@
                         }
                     }
                 });
+                chartsInitialized = true;
             }
         });
     </script>
