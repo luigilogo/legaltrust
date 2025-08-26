@@ -56,20 +56,24 @@ function drawScoreCircle() {
     window.requestAnimationFrame(animate);
 }
 
-// Funzione per animare la blockchain
+// Funzione per animare la blockchain con dati fittizi
 function animateBlockchain() {
     const container = document.querySelector('.blockchain-animation');
     const nodesData = [
-        { icon: '🌱', label: 'Origine' },
-        { icon: '🏭', label: 'Lavorazione' },
-        { icon: '📦', label: 'Logistica' },
-        { icon: '🏛️', label: 'Certificazione' }
+        { icon: '🍇', label: 'Origine: "Vigneto Siciliano"', data: 'ID Lutto: #F37A' },
+        { icon: '🍷', label: 'Lavorazione: "Cantine Legali S.p.a."', data: 'Data: 15/08/2025' },
+        { icon: '📦', label: 'Logistica: "Spedizioni Trasparenti Ltd."', data: 'Codice: A4F-98Y' },
+        { icon: '🏛️', label: 'Certificazione: "LegalTrust"', data: 'Esito: Conforme' }
     ];
 
     nodesData.forEach((nodeData, index) => {
         const node = document.createElement('div');
         node.className = 'blockchain-node';
-        node.innerHTML = `<div class="icon">${nodeData.icon}</div><p>${nodeData.label}</p>`;
+        node.innerHTML = `
+            <div class="icon">${nodeData.icon}</div>
+            <p>${nodeData.label}</p>
+            <small>${nodeData.data}</small>
+        `;
         
         container.appendChild(node);
         if (index < nodesData.length - 1) {
@@ -125,8 +129,8 @@ function animateRiskAnalysis() {
             <h3>Analisi Approfondita</h3>
             <p>Il nostro algoritmo ha identificato <strong>2 fornitori</strong> ad alto rischio:</p>
             <ul class="risk-list">
-                <li style="animation-delay: 0s;"><span class="risk-name">Fornitore Alpha</span>: Collegamento a società offshore.</li>
-                <li style="animation-delay: 0.2s;"><span class="risk-name">Fornitore Beta</span>: Transazioni anomale con un'azienda sotto indagine.</li>
+                <li style="animation-delay: 0s;"><span class="risk-name">Fornitore Omega S.r.l.</span>: Collegamento a società offshore.</li>
+                <li style="animation-delay: 0.2s;"><span class="risk-name">Logistica Beta Inc.</span>: Transazioni anomale con un'azienda sotto indagine per frode fiscale.</li>
             </ul>
         `;
     }, 2500);
