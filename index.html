@@ -77,11 +77,19 @@
             to { transform: rotate(360deg); }
         }
 
+        .score-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin: 40px auto;
+        }
+        
         .score-wrapper {
             position: relative;
             width: 280px;
             height: 280px;
-            margin: 40px auto;
         }
 
         #score-canvas {
@@ -99,6 +107,60 @@
             transform: translate(-50%, -50%);
             font-size: 5em;
             font-weight: 700;
+        }
+        
+        .score-breakdown {
+            width: 350px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            box-shadow: var(--shadow-effect);
+            text-align: left;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s, transform 1s;
+        }
+
+        .score-breakdown.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bar-container {
+            margin-bottom: 15px;
+        }
+
+        .bar-label {
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bar {
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background-color: #fff;
+            width: 0;
+            transition: width 1.5s var(--transition-slow);
+        }
+
+        .section {
+            padding: 80px 5%;
+            text-align: center;
+        }
+
+        .dark-section {
+            background-color: #222;
+            color: var(--light-text);
         }
 
         .blockchain-animation {
@@ -141,26 +203,18 @@
             to { transform: scale(1.1); opacity: 1; }
         }
 
-        .section {
-            padding: 80px 5%;
-            text-align: center;
-        }
-
-        .dark-section {
-            background-color: #222;
-            color: var(--light-text);
-        }
-
-        .chart-container {
+        .chart-container, .balance-container {
             max-width: 900px;
             margin: 50px auto;
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             align-items: center;
             gap: 40px;
         }
 
-        .risk-info {
+        .risk-info, .balance-info {
+            max-width: 400px;
             text-align: left;
         }
 
@@ -212,6 +266,7 @@
             <a href="#score">Score</a>
             <a href="#blockchain">Trasparenza</a>
             <a href="#ai">Analisi AI</a>
+            <a href="#bilancio">Bilancio</a>
         </nav>
     </header>
 
@@ -224,6 +279,25 @@
                     <div id="legalScoreValue" class="score-value" data-final-score="95">0</div>
                     <p class="score-label">LegalScore™</p>
                 </div>
+                <div class="score-breakdown">
+                    <h3>Dettaglio del Punteggio</h3>
+                    <div class="bar-container">
+                        <div class="bar-label"><span>Governance</span> <span class="score-percent">0%</span></div>
+                        <div class="bar"><div class="bar-fill" data-score="95"></div></div>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-label"><span>Filiera</span> <span class="score-percent">0%</span></div>
+                        <div class="bar"><div class="bar-fill" data-score="90"></div></div>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-label"><span>Analisi Finanziaria</span> <span class="score-percent">0%</span></div>
+                        <div class="bar"><div class="bar-fill" data-score="85"></div></div>
+                    </div>
+                    <div class="bar-container">
+                        <div class="bar-label"><span>Rete Fornitori (AI)</span> <span class="score-percent">0%</span></div>
+                        <div class="bar"><div class="bar-fill" data-score="92"></div></div>
+                    </div>
+                </div>
             </div>
             <p class="score-description">Un punteggio dinamico che certifica l'integrità della tua azienda.</p>
         </section>
@@ -232,7 +306,7 @@
             <h2>Trasparenza Immutabile.</h2>
             <p>Ogni passo della tua filiera, un blocco di fiducia.</p>
             <div class="blockchain-animation">
-            </div>
+                </div>
         </section>
 
         <section id="ai" class="section dark-section">
@@ -250,17 +324,59 @@
                 <canvas id="riskChart"></canvas>
             </div>
         </section>
+
+        <section id="bilancio" class="section">
+            <h2>Analisi di Bilancio. Oltre i Numeri.</h2>
+            <div class="balance-container">
+                <div class="balance-info">
+                    <h3>Indicatori di Sostenibilità</h3>
+                    <p>Il nostro algoritmo incrocia i dati finanziari con il LegalScore per valutare la salute a lungo termine.</p>
+                    <div class="indicator-data">
+                        <p><strong>ROE:</strong> <span class="indicator-value roe">0%</span></p>
+                        <p><strong>ROI:</strong> <span class="indicator-value roi">0%</span></p>
+                        <p><strong>D/E Ratio:</strong> <span class="indicator-value de-ratio">0%</span></p>
+                        <p class="analysis-comment">Analisi fittizia che mostra una correlazione tra una solida governance e indicatori finanziari sani, riducendo il rischio d'impresa.</p>
+                    </div>
+                </div>
+                <canvas id="balanceChart"></canvas>
+            </div>
+        </section>
+
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // Funzione per l'animazione del punteggio
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (entry.target.id === 'score') {
+                            animateScore(95);
+                            drawScoreCircle();
+                            animateScoreBreakdown();
+                        } else if (entry.target.id === 'blockchain') {
+                            animateBlockchain();
+                        } else if (entry.target.id === 'ai') {
+                            animateRiskAnalysis();
+                        } else if (entry.target.id === 'bilancio') {
+                            animateBalanceAnalysis();
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(document.getElementById('score'));
+            observer.observe(document.getElementById('blockchain'));
+            observer.observe(document.getElementById('ai'));
+            observer.observe(document.getElementById('bilancio'));
+
+            // Funzioni di Animazione e Logica (rimangono invariate)
+            
             function animateScore(finalScore) {
                 const scoreElement = document.getElementById('legalScoreValue');
                 const duration = 2000;
                 let startTimestamp = null;
-
                 const step = (timestamp) => {
                     if (!startTimestamp) startTimestamp = timestamp;
                     const progress = Math.min((timestamp - startTimestamp) / duration, 1);
@@ -272,7 +388,6 @@
                 window.requestAnimationFrame(step);
             }
 
-            // Funzione per animare il cerchio del punteggio
             function drawScoreCircle() {
                 const canvas = document.getElementById('score-canvas');
                 if (!canvas) return;
@@ -280,38 +395,50 @@
                 const finalScore = parseInt(document.getElementById('legalScoreValue').dataset.finalScore, 10);
                 const radius = canvas.width / 2 - 10;
                 const endAngle = (2 * Math.PI) * (finalScore / 100);
-
-                let currentAngle = 0;
-                const animationDuration = 2000;
                 let startTimestamp = null;
 
                 function animate(timestamp) {
                     if (!startTimestamp) startTimestamp = timestamp;
-                    const progress = Math.min((timestamp - startTimestamp) / animationDuration, 1);
+                    const progress = Math.min((timestamp - startTimestamp) / 2000, 1);
                     const angle = progress * endAngle;
-
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
                     ctx.beginPath();
                     ctx.arc(canvas.width / 2, canvas.height / 2, radius, 0, 2 * Math.PI);
                     ctx.lineWidth = 15;
                     ctx.strokeStyle = '#e0e0e0';
                     ctx.stroke();
-
                     ctx.beginPath();
                     ctx.arc(canvas.width / 2, canvas.height / 2, radius, -Math.PI / 2, -Math.PI / 2 + angle);
                     ctx.lineWidth = 15;
                     ctx.strokeStyle = '#3b5998';
                     ctx.stroke();
-
                     if (progress < 1) {
                         window.requestAnimationFrame(animate);
                     }
                 }
                 window.requestAnimationFrame(animate);
             }
+            
+            function animateScoreBreakdown() {
+                const breakdown = document.querySelector('.score-breakdown');
+                breakdown.classList.add('active');
+                const bars = document.querySelectorAll('.bar-fill');
+                bars.forEach(bar => {
+                    const score = bar.dataset.score;
+                    bar.style.width = `${score}%`;
+                    const percentSpan = bar.closest('.bar-container').querySelector('.score-percent');
+                    let current = 0;
+                    const interval = setInterval(() => {
+                        if (current >= score) {
+                            clearInterval(interval);
+                        } else {
+                            current++;
+                            percentSpan.textContent = `${current}%`;
+                        }
+                    }, 20);
+                });
+            }
 
-            // Funzione per animare la blockchain con dati fittizi
             function animateBlockchain() {
                 const container = document.querySelector('.blockchain-animation');
                 const nodesData = [
@@ -321,6 +448,7 @@
                     { icon: '🏛️', label: 'Certificazione: "LegalTrust"', data: 'Esito: Conforme' }
                 ];
 
+                container.innerHTML = ''; // Pulisce il contenitore prima di animare
                 nodesData.forEach((nodeData, index) => {
                     const node = document.createElement('div');
                     node.className = 'blockchain-node';
@@ -329,7 +457,6 @@
                         <p>${nodeData.label}</p>
                         <small>${nodeData.data}</small>
                     `;
-
                     container.appendChild(node);
                     if (index < nodesData.length - 1) {
                         const arrow = document.createElement('div');
@@ -337,23 +464,23 @@
                         arrow.innerHTML = '&#8594;';
                         container.appendChild(arrow);
                     }
-
                     setTimeout(() => {
                         node.classList.add('active');
                     }, index * 500);
                 });
             }
 
-            // Funzione per animare il grafico dell'IA e simulare l'analisi dei dati
             function animateRiskAnalysis() {
                 const ctx = document.getElementById('riskChart').getContext('2d');
+                if (window.riskChart) {
+                    window.riskChart.destroy();
+                }
                 const riskData = [
                     { label: 'Basso Rischio', value: 75, color: '#4bc0c0' },
                     { label: 'Rischio Medio', value: 23, color: '#ffcd56' },
                     { label: 'Alto Rischio', value: 2, color: '#ff6384' }
                 ];
-
-                const riskChart = new Chart(ctx, {
+                window.riskChart = new Chart(ctx, {
                     type: 'doughnut',
                     data: {
                         labels: riskData.map(d => d.label),
@@ -377,7 +504,6 @@
                     }
                 });
 
-                // Simulazione del dettaglio dell'analisi
                 setTimeout(() => {
                     const infoContainer = document.querySelector('.risk-info');
                     infoContainer.innerHTML = `
@@ -391,26 +517,70 @@
                 }, 2500);
             }
 
-            // Lanciare le animazioni all'intersezione con l'Observer
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        if (entry.target.id === 'score') {
-                            animateScore(95);
-                            drawScoreCircle();
-                        } else if (entry.target.id === 'blockchain') {
-                            animateBlockchain();
-                        } else if (entry.target.id === 'ai') {
-                            animateRiskAnalysis();
+            function animateBalanceAnalysis() {
+                const roeElement = document.querySelector('.indicator-value.roe');
+                const roiElement = document.querySelector('.indicator-value.roi');
+                const deElement = document.querySelector('.indicator-value.de-ratio');
+
+                function animateValue(element, finalValue, duration = 1500) {
+                    let start = 0;
+                    const increment = finalValue / (duration / 10);
+                    let current = start;
+                    const interval = setInterval(() => {
+                        current += increment;
+                        if (current >= finalValue) {
+                            clearInterval(interval);
+                            element.textContent = `${finalValue}%`;
+                        } else {
+                            element.textContent = `${Math.floor(current)}%`;
                         }
-                        observer.unobserve(entry.target);
+                    }, 10);
+                }
+
+                animateValue(roeElement, 15);
+                animateValue(roiElement, 12);
+                animateValue(deElement, 40);
+
+                const ctx = document.getElementById('balanceChart').getContext('2d');
+                if (window.balanceChart) {
+                    window.balanceChart.destroy();
+                }
+                const data = {
+                    labels: ['Governance', 'LegalScore', 'Fiducia Investitori'],
+                    datasets: [{
+                        label: 'Correlazione',
+                        data: [95, 95, 85],
+                        backgroundColor: [
+                            '#3b5998',
+                            '#4bc0c0',
+                            '#ffcd56'
+                        ],
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                };
+
+                window.balanceChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'Correlazione tra Legalità e Performance'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        }
                     }
                 });
-            }, { threshold: 0.5 });
-
-            observer.observe(document.getElementById('score'));
-            observer.observe(document.getElementById('blockchain'));
-            observer.observe(document.getElementById('ai'));
+            }
         });
     </script>
 </body>
