@@ -6,6 +6,7 @@
     <title>LegalTrust | Misura la tua integrità</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <style>
         :root {
             --primary-color: #3b5998;
@@ -226,85 +227,51 @@
             color: var(--light-text);
         }
 
-        /* Sezione Trasparenza migliorata */
-        #blockchain-container {
-            width: 100%;
-            height: 400px;
-            position: relative;
-            margin: 50px auto;
-        }
-        .node {
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            box-shadow: 0 0 15px rgba(59, 89, 152, 0.5);
+        .blockchain-animation {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: white;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: 2px solid transparent;
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.8s ease;
-        }
-        .node.active {
-            opacity: 1;
-            transform: scale(1);
-        }
-        .node:hover {
-            transform: scale(1.1);
-            border-color: #fff;
-        }
-        .node-icon {
-            font-size: 2em;
-        }
-        .node-label {
-            margin-top: 5px;
-            font-size: 0.9em;
-            font-weight: 600;
-        }
-        .node-tooltip {
-            position: absolute;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
+            margin: 50px 0;
+            flex-wrap: nowrap;
+            overflow-x: auto;
             white-space: nowrap;
+        }
+        
+        .blockchain-node {
+            display: inline-block;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background-color: var(--secondary-color);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-effect);
             opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        .node:hover .node-tooltip {
-            opacity: 1;
-        }
-        .line {
-            position: absolute;
-            height: 2px;
-            z-index: -1;
-            transform-origin: left center;
-            background-color: #8b9dc3;
-            opacity: 0;
-            animation: none;
-            transition: opacity 0.5s ease, background-color 0.5s ease;
-        }
-        .line.active {
-            animation: pulse-line 1.5s infinite alternate;
-            opacity: 1;
-        }
-        @keyframes pulse-line {
-            from { background-color: rgba(139, 157, 195, 0.5); }
-            to { background-color: #8b9dc3; box-shadow: 0 0 10px #8b9dc3; }
+            transform: translateY(20px);
+            transition: all 0.5s var(--transition-slow);
+            margin: 10px;
+            white-space: normal;
         }
 
-        /* Sezione AI ripristinata */
+        .blockchain-node.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .blockchain-arrow {
+            display: inline-block;
+            font-size: 2em;
+            color: var(--primary-color);
+            margin: 0 10px;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); opacity: 0.7; }
+            to { transform: scale(1.1); opacity: 1; }
+        }
+
+        /* Sezione AI migliorata */
         #ai-container {
             display: flex;
             flex-direction: column;
@@ -318,8 +285,6 @@
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
-            width: 100%;
-            max-width: 900px;
         }
         
         .ai-card {
@@ -333,7 +298,6 @@
             transform: translateY(20px);
             transition: all 0.8s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
         }
 
         .ai-card.active {
@@ -356,6 +320,19 @@
         .ai-card .status {
             font-size: 0.9em;
             font-style: italic;
+        }
+        
+        #ai-text-overlay {
+            color: #fff;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 600;
+            animation: fadeInOut 2s infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
         }
 
         /* Sezione Bilancio migliorata */
@@ -426,14 +403,14 @@
 
     <header class="header">
         <div class="logo">
-            <span>🛡️</span> LegalTrust
+            <span>&#9876;</span> LegalTrust
         </div>
         <nav class="nav">
             <a href="#score">Score</a>
+            <a href="#benefits">Benefici</a>
             <a href="#blockchain">Trasparenza</a>
             <a href="#ai">Analisi AI</a>
             <a href="#bilancio">Bilancio</a>
-            <a href="#benefits">Benefici</a>
         </nav>
     </header>
 
@@ -467,62 +444,6 @@
                 </div>
             </div>
             <p class="score-description">Un punteggio dinamico che certifica l'integrità della tua azienda, basato su un'analisi multidimensionale.</p>
-        </section>
-
-        <section id="blockchain" class="section dark-section">
-            <h2>Trasparenza Immutabile.</h2>
-            <p>Ogni passo della tua filiera, un blocco di fiducia.</p>
-            <div id="blockchain-container">
-                </div>
-        </section>
-
-        <section id="ai" class="section">
-            <h2>Analisi Predittiva. L'AI che Vede nel Futuro.</h2>
-            <p>Il nostro algoritmo scansiona miliardi di dati in tempo reale per identificare e neutralizzare rischi prima che diventino un problema.</p>
-            <div id="ai-container">
-                <div class="ai-dashboard">
-                    <div class="ai-card" style="animation-delay: 0.2s;">
-                        <h4>Rischio Geopolitico</h4>
-                        <div class="score" id="geoScore"></div>
-                        <div class="status" id="geoStatus"></div>
-                    </div>
-                    <div class="ai-card" style="animation-delay: 0.4s;">
-                        <h4>Rischio Reputazionale</h4>
-                        <div class="score" id="reputationScore"></div>
-                        <div class="status" id="reputationStatus"></div>
-                    </div>
-                    <div class="ai-card" style="animation-delay: 0.6s;">
-                        <h4>Rischio di Sostenibilità</h4>
-                        <div class="score" id="sustainabilityScore"></div>
-                        <div class="status" id="sustainabilityStatus"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="bilancio" class="section">
-            <h2>Salute Finanziaria & Integrità Legale.</h2>
-            <p>Una solida governance non è solo etica, è anche un vantaggio competitivo che si riflette nei bilanci.</p>
-            <div class="balance-container">
-                <div class="balance-info">
-                    <h3>Indicatori e Interpretazione</h3>
-                    <p>La nostra analisi incrocia il **LegalScore** con gli indicatori di bilancio per fornire una visione completa della solidità aziendale.</p>
-                    <div class="indicator-data">
-                        <p><strong>ROE:</strong> <span class="indicator-value roe">0%</span></p>
-                        <p><strong>ROI:</strong> <span class="indicator-value roi">0%</span></p>
-                        <p><strong>D/E Ratio:</strong> <span class="indicator-value de-ratio">0%</span></p>
-                        <p class="analysis-comment">Un alto LegalScore (<span class="score-percent">95%</span>) è correlato a un'elevata redditività del capitale (ROE) e a una gestione efficiente del debito (D/E Ratio), dimostrando la solidità e l'affidabilità dell'azienda.</p>
-                    </div>
-                </div>
-                <div class="balance-charts">
-                    <div class="chart-box">
-                        <canvas id="balanceBarChart"></canvas>
-                    </div>
-                    <div class="chart-box" style="animation-delay: 0.3s;">
-                        <canvas id="balanceLineChart"></canvas>
-                    </div>
-                </div>
-            </div>
         </section>
 
         <section id="benefits" class="advantages-section">
@@ -595,6 +516,62 @@
             </div>
         </section>
 
+        <section id="blockchain" class="section">
+            <h2>Trasparenza Immutabile.</h2>
+            <p>Ogni passo della tua filiera, un blocco di fiducia.</p>
+            <div class="blockchain-animation">
+                </div>
+        </section>
+
+        <section id="ai" class="section dark-section">
+            <h2>Analisi Predittiva. L'AI che Vede nel Futuro.</h2>
+            <p>Il nostro algoritmo scansiona miliardi di dati in tempo reale per identificare e neutralizzare rischi prima che diventino un problema.</p>
+            <div id="ai-container">
+                <div class="ai-dashboard">
+                    <div class="ai-card" style="animation-delay: 0.2s;">
+                        <h4>Rischio Geopolitico</h4>
+                        <div class="score" id="geoScore"></div>
+                        <div class="status" id="geoStatus"></div>
+                    </div>
+                    <div class="ai-card" style="animation-delay: 0.4s;">
+                        <h4>Rischio Reputazionale</h4>
+                        <div class="score" id="reputationScore"></div>
+                        <div class="status" id="reputationStatus"></div>
+                    </div>
+                    <div class="ai-card" style="animation-delay: 0.6s;">
+                        <h4>Rischio di Sostenibilità</h4>
+                        <div class="score" id="sustainabilityScore"></div>
+                        <div class="status" id="sustainabilityStatus"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="bilancio" class="section">
+            <h2>Salute Finanziaria & Integrità Legale.</h2>
+            <p>Una solida governance non è solo etica, è anche un vantaggio competitivo che si riflette nei bilanci.</p>
+            <div class="balance-container">
+                <div class="balance-info">
+                    <h3>Indicatori e Interpretazione</h3>
+                    <p>La nostra analisi incrocia il **LegalScore** con gli indicatori di bilancio per fornire una visione completa della solidità aziendale.</p>
+                    <div class="indicator-data">
+                        <p><strong>ROE:</strong> <span class="indicator-value roe">0%</span></p>
+                        <p><strong>ROI:</strong> <span class="indicator-value roi">0%</span></p>
+                        <p><strong>D/E Ratio:</strong> <span class="indicator-value de-ratio">0%</span></p>
+                        <p class="analysis-comment">Un alto LegalScore (<span class="score-percent">95%</span>) è correlato a un'elevata redditività del capitale (ROE) e a una gestione efficiente del debito (D/E Ratio), dimostrando la solidità e l'affidabilità dell'azienda.</p>
+                    </div>
+                </div>
+                <div class="balance-charts">
+                    <div class="chart-box">
+                        <canvas id="balanceBarChart"></canvas>
+                    </div>
+                    <div class="chart-box" style="animation-delay: 0.3s;">
+                        <canvas id="balanceLineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
     
     <button onclick="scrollToTop()" id="scrollToTopBtn" title="Torna su">&#8593;</button>
@@ -616,14 +593,28 @@
                         } else if (entry.target.id === 'bilancio') {
                             animateBalanceAnalysis();
                         }
+                        // Non disattivare l'observer per il bilancio, ma per i suoi chart-box
+                        if (entry.target.id !== 'bilancio') {
+                             observer.unobserve(entry.target);
+                        }
                     }
                 });
             }, { threshold: 0.5 });
             
+            const chartObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.5 });
+
             observer.observe(document.getElementById('score'));
             observer.observe(document.getElementById('blockchain'));
             observer.observe(document.getElementById('ai'));
             observer.observe(document.getElementById('bilancio'));
+            chartObserver.observe(document.querySelector('#bilancio .chart-box:nth-child(1)'));
+            chartObserver.observe(document.querySelector('#bilancio .chart-box:nth-child(2)'));
             
             // Pulsante torna su
             const scrollToTopBtn = document.getElementById("scrollToTopBtn");
@@ -659,7 +650,7 @@
                 const canvas = document.getElementById('score-canvas');
                 if (!canvas) return;
                 const ctx = canvas.getContext('2d');
-                const finalScore = parseInt(document.getElementById('legalScoreValue').dataset.finalScore, 10);
+                const finalScore = parseInt(document.getElementById('legalScoreValue').dataset.final-score, 10);
                 const radius = canvas.width / 2 - 10;
                 const endAngle = (2 * Math.PI) * (finalScore / 100);
                 let startTimestamp = null;
@@ -710,58 +701,34 @@
             }
 
             function animateBlockchain() {
-                const container = document.getElementById('blockchain-container');
-                container.innerHTML = '';
+                const container = document.querySelector('.blockchain-animation');
                 const nodesData = [
-                    { id: 'node1', icon: '🍇', label: 'Origine', top: '10%', left: '15%', tooltip: 'Vigneto Siciliano - ID #F37A' },
-                    { id: 'node2', icon: '🍷', label: 'Lavorazione', top: '30%', left: '45%', tooltip: 'Cantine Legali S.p.a. - 15/08/2025' },
-                    { id: 'node3', icon: '📦', label: 'Logistica', top: '70%', left: '30%', tooltip: 'Spedizioni Trasparenti Ltd. - Codice A4F-98Y' },
-                    { id: 'node4', icon: '🏛️', label: 'Certificazione', top: '50%', left: '75%', tooltip: 'LegalTrust - Esito: Conforme' }
+                    { icon: '🍇', label: 'Origine: "Vigneto Siciliano"', data: 'ID Lotto: #F37A' },
+                    { icon: '🍷', label: 'Lavorazione: "Cantine Legali S.p.a."', data: 'Data: 15/08/2025' },
+                    { icon: '📦', label: 'Logistica: "Spedizioni Trasparenti Ltd."', data: 'Codice: A4F-98Y' },
+                    { icon: '🏛️', label: 'Certificazione: "LegalTrust"', data: 'Esito: Conforme' }
                 ];
-                
-                function createLine(x1, y1, x2, y2, delay) {
-                    const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-                    const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-                    const line = document.createElement('div');
-                    line.className = 'line';
-                    line.style.width = `${length}px`;
-                    line.style.top = `${y1}px`;
-                    line.style.left = `${x1}px`;
-                    line.style.transform = `rotate(${angle}deg)`;
-                    container.appendChild(line);
 
-                    setTimeout(() => {
-                        line.classList.add('active');
-                    }, delay);
-                }
-
+                container.innerHTML = '';
                 nodesData.forEach((nodeData, index) => {
-                    const nodeEl = document.createElement('div');
-                    nodeEl.className = 'node';
-                    nodeEl.style.top = nodeData.top;
-                    nodeEl.style.left = nodeData.left;
-                    nodeEl.innerHTML = `<span class="node-icon">${nodeData.icon}</span><span class="node-label">${nodeData.label}</span><span class="node-tooltip">${nodeData.tooltip}</span>`;
-                    container.appendChild(nodeEl);
+                    const node = document.createElement('div');
+                    node.className = 'blockchain-node';
+                    node.innerHTML = `
+                        <div class="icon">${nodeData.icon}</div>
+                        <p>${nodeData.label}</p>
+                        <small>${nodeData.data}</small>
+                    `;
+                    container.appendChild(node);
+                    if (index < nodesData.length - 1) {
+                        const arrow = document.createElement('div');
+                        arrow.className = 'blockchain-arrow';
+                        arrow.innerHTML = '&#8594;';
+                        container.appendChild(arrow);
+                    }
                     setTimeout(() => {
-                        nodeEl.classList.add('active');
-                    }, index * 400);
+                        node.classList.add('active');
+                    }, index * 500);
                 });
-
-                setTimeout(() => {
-                    const nodes = document.querySelectorAll('#blockchain-container .node');
-                    const pos1 = nodes[0].getBoundingClientRect();
-                    const pos2 = nodes[1].getBoundingClientRect();
-                    const pos3 = nodes[2].getBoundingClientRect();
-                    const pos4 = nodes[3].getBoundingClientRect();
-                    const containerRect = container.getBoundingClientRect();
-                    
-                    const x = i => nodes[i].offsetLeft + nodes[i].offsetWidth / 2;
-                    const y = i => nodes[i].offsetTop + nodes[i].offsetHeight / 2;
-
-                    createLine(x(0), y(0), x(1), y(1), 500);
-                    createLine(x(1), y(1), x(2), y(2), 1500);
-                    createLine(x(2), y(2), x(3), y(3), 2500);
-                }, 100);
             }
             
             function animateAI() {
@@ -771,6 +738,10 @@
                 const geoStatusEl = document.getElementById('geoStatus');
                 const reputationStatusEl = document.getElementById('reputationStatus');
                 const sustainabilityStatusEl = document.getElementById('sustainabilityStatus');
+                
+                const geoCards = document.querySelector('.ai-card:nth-child(1)');
+                const repCards = document.querySelector('.ai-card:nth-child(2)');
+                const susCards = document.querySelector('.ai-card:nth-child(3)');
 
                 const data = {
                     geo: { score: 15, status: 'Basso', color: '#4CAF50' },
@@ -793,22 +764,21 @@
                     }, 50);
                 }
 
-                document.querySelectorAll('.ai-card').forEach((card, index) => {
+                geoCards.classList.add('active');
+                setTimeout(() => {
+                    updateScore(geoScoreEl, data.geo.score, geoStatusEl, data.geo.status, data.geo.color);
+                    repCards.classList.add('active');
                     setTimeout(() => {
-                        card.classList.add('active');
-                    }, index * 500);
-                });
-
-                updateScore(geoScoreEl, data.geo.score, geoStatusEl, data.geo.status, data.geo.color);
-                updateScore(reputationScoreEl, data.reputation.score, reputationStatusEl, data.reputation.status, data.reputation.color);
-                updateScore(sustainabilityScoreEl, data.sustainability.score, sustainabilityStatusEl, data.sustainability.status, data.sustainability.color);
+                        updateScore(reputationScoreEl, data.reputation.score, reputationStatusEl, data.reputation.status, data.reputation.color);
+                        susCards.classList.add('active');
+                        setTimeout(() => {
+                            updateScore(sustainabilityScoreEl, data.sustainability.score, sustainabilityStatusEl, data.sustainability.status, data.sustainability.color);
+                        }, 500);
+                    }, 500);
+                }, 500);
             }
-            
-            let chartsInitialized = false;
 
             function animateBalanceAnalysis() {
-                if (chartsInitialized) return;
-
                 const roeElement = document.querySelector('.indicator-value.roe');
                 const roiElement = document.querySelector('.indicator-value.roi');
                 const deElement = document.querySelector('.indicator-value.de-ratio');
@@ -831,11 +801,6 @@
                 animateValue(roeElement, 15);
                 animateValue(roiElement, 12);
                 animateValue(deElement, 40);
-
-                const chartBox1 = document.querySelector('#bilancio .chart-box:nth-child(1)');
-                const chartBox2 = document.querySelector('#bilancio .chart-box:nth-child(2)');
-                chartBox1.classList.add('active');
-                chartBox2.classList.add('active');
                 
                 // Grafico a Barre
                 const barCtx = document.getElementById('balanceBarChart').getContext('2d');
@@ -889,7 +854,6 @@
                         }
                     }
                 });
-                chartsInitialized = true;
             }
         });
     </script>
