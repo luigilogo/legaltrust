@@ -535,13 +535,15 @@
 
                         setTimeout(() => {
                             const infoContainer = document.querySelector('#ai .risk-info');
-                            infoContainer.innerHTML = `
-                                <h3>Analisi Approfondita</h3>
-                                <p>Il nostro algoritmo ha identificato **1 connessione ad alto rischio**:</p>
-                                <ul class="risk-list">
-                                    <li style="animation-delay: 0s;"><span class="risk-name">Fornitore D</span>: Collegamento a **Società E**, coinvolta in un'indagine per frode fiscale.</li>
-                                </ul>
-                            `;
+                            if (infoContainer) {
+                                infoContainer.innerHTML = `
+                                    <h3>Analisi Approfondita</h3>
+                                    <p>Il nostro algoritmo ha identificato **1 connessione ad alto rischio**:</p>
+                                    <ul class="risk-list">
+                                        <li style="animation-delay: 0s;"><span class="risk-name">Fornitore D</span>: Collegato a **Società E**, coinvolta in un'indagine per frode fiscale.</li>
+                                    </ul>
+                                `;
+                            }
                             riskNodes.push(nodes[4]);
                             riskNodes.push(nodes[5]);
                             riskConnections.push({ from: nodes[4], to: nodes[5] });
