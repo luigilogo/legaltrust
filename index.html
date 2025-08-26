@@ -4,8 +4,204 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LegalTrust | Misura la tua integrità</title>
-    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #3b5998;
+            --secondary-color: #f7f7f7;
+            --text-color: #333;
+            --light-text: #fff;
+            --gradient-bg: linear-gradient(135deg, #3b5998, #8b9dc3);
+            --shadow-effect: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --transition-fast: 0.3s ease-in-out;
+            --transition-slow: 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            color: var(--text-color);
+            background-color: #fff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-effect);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: var(--gradient-bg);
+            color: var(--light-text);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent, transparent);
+            animation: flow 15s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes flow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .score-wrapper {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 40px auto;
+        }
+
+        #score-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .score-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5em;
+            font-weight: 700;
+        }
+
+        .blockchain-animation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 50px 0;
+            flex-wrap: wrap;
+        }
+
+        .blockchain-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background-color: var(--secondary-color);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-effect);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s var(--transition-slow);
+            margin: 10px;
+        }
+
+        .blockchain-node.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .blockchain-arrow {
+            font-size: 2em;
+            color: var(--primary-color);
+            margin: 0 10px;
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); opacity: 0.7; }
+            to { transform: scale(1.1); opacity: 1; }
+        }
+
+        .section {
+            padding: 80px 5%;
+            text-align: center;
+        }
+
+        .dark-section {
+            background-color: #222;
+            color: var(--light-text);
+        }
+
+        .chart-container {
+            max-width: 900px;
+            margin: 50px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .risk-info {
+            text-align: left;
+        }
+
+        .dot {
+            height: 15px;
+            width: 15px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .dot.high { background-color: #ff6384; }
+        .dot.medium { background-color: #ffcd56; }
+        .dot.low { background-color: #4bc0c0; }
+
+        .risk-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin-top: 20px;
+            border-left: 3px solid #ff6384;
+            padding-left: 15px;
+        }
+
+        .risk-list li {
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fade-in-up 0.5s forwards;
+        }
+
+        .risk-name {
+            font-weight: 600;
+            color: #ff6384;
+        }
+
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
 
@@ -35,7 +231,7 @@
             <h2>Trasparenza Immutabile.</h2>
             <p>Ogni passo della tua filiera, un blocco di fiducia.</p>
             <div class="blockchain-animation">
-                </div>
+            </div>
         </section>
 
         <section id="ai" class="section dark-section">
@@ -55,7 +251,166 @@
         </section>
     </main>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
-    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Funzione per l'animazione del punteggio
+            function animateScore(finalScore) {
+                const scoreElement = document.getElementById('legalScoreValue');
+                const duration = 2000;
+                let startTimestamp = null;
+
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    scoreElement.textContent = Math.floor(progress * finalScore);
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            // Funzione per animare il cerchio del punteggio
+            function drawScoreCircle() {
+                const canvas = document.getElementById('score-canvas');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                const finalScore = parseInt(document.getElementById('legalScoreValue').dataset.finalScore, 10);
+                const radius = canvas.width / 2 - 10;
+                const endAngle = (2 * Math.PI) * (finalScore / 100);
+
+                let currentAngle = 0;
+                const animationDuration = 2000;
+                let startTimestamp = null;
+
+                function animate(timestamp) {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / animationDuration, 1);
+                    const angle = progress * endAngle;
+
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2, canvas.height / 2, radius, 0, 2 * Math.PI);
+                    ctx.lineWidth = 15;
+                    ctx.strokeStyle = '#e0e0e0';
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.arc(canvas.width / 2, canvas.height / 2, radius, -Math.PI / 2, -Math.PI / 2 + angle);
+                    ctx.lineWidth = 15;
+                    ctx.strokeStyle = '#3b5998';
+                    ctx.stroke();
+
+                    if (progress < 1) {
+                        window.requestAnimationFrame(animate);
+                    }
+                }
+                window.requestAnimationFrame(animate);
+            }
+
+            // Funzione per animare la blockchain con dati fittizi
+            function animateBlockchain() {
+                const container = document.querySelector('.blockchain-animation');
+                const nodesData = [
+                    { icon: '🍇', label: 'Origine: "Vigneto Siciliano"', data: 'ID Lotto: #F37A' },
+                    { icon: '🍷', label: 'Lavorazione: "Cantine Legali S.p.a."', data: 'Data: 15/08/2025' },
+                    { icon: '📦', label: 'Logistica: "Spedizioni Trasparenti Ltd."', data: 'Codice: A4F-98Y' },
+                    { icon: '🏛️', label: 'Certificazione: "LegalTrust"', data: 'Esito: Conforme' }
+                ];
+
+                nodesData.forEach((nodeData, index) => {
+                    const node = document.createElement('div');
+                    node.className = 'blockchain-node';
+                    node.innerHTML = `
+                        <div class="icon">${nodeData.icon}</div>
+                        <p>${nodeData.label}</p>
+                        <small>${nodeData.data}</small>
+                    `;
+
+                    container.appendChild(node);
+                    if (index < nodesData.length - 1) {
+                        const arrow = document.createElement('div');
+                        arrow.className = 'blockchain-arrow';
+                        arrow.innerHTML = '&#8594;';
+                        container.appendChild(arrow);
+                    }
+
+                    setTimeout(() => {
+                        node.classList.add('active');
+                    }, index * 500);
+                });
+            }
+
+            // Funzione per animare il grafico dell'IA e simulare l'analisi dei dati
+            function animateRiskAnalysis() {
+                const ctx = document.getElementById('riskChart').getContext('2d');
+                const riskData = [
+                    { label: 'Basso Rischio', value: 75, color: '#4bc0c0' },
+                    { label: 'Rischio Medio', value: 23, color: '#ffcd56' },
+                    { label: 'Alto Rischio', value: 2, color: '#ff6384' }
+                ];
+
+                const riskChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: riskData.map(d => d.label),
+                        datasets: [{
+                            data: riskData.map(d => d.value),
+                            backgroundColor: riskData.map(d => d.color),
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        aspectRatio: 1,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        cutout: '80%',
+                        animation: {
+                            animateRotate: true,
+                            animateScale: true
+                        }
+                    }
+                });
+
+                // Simulazione del dettaglio dell'analisi
+                setTimeout(() => {
+                    const infoContainer = document.querySelector('.risk-info');
+                    infoContainer.innerHTML = `
+                        <h3>Analisi Approfondita</h3>
+                        <p>Il nostro algoritmo ha identificato <strong>2 fornitori</strong> ad alto rischio:</p>
+                        <ul class="risk-list">
+                            <li style="animation-delay: 0s;"><span class="risk-name">Fornitore Omega S.r.l.</span>: Collegamento a società offshore.</li>
+                            <li style="animation-delay: 0.2s;"><span class="risk-name">Logistica Beta Inc.</span>: Transazioni anomale con un'azienda sotto indagine per frode fiscale.</li>
+                        </ul>
+                    `;
+                }, 2500);
+            }
+
+            // Lanciare le animazioni all'intersezione con l'Observer
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (entry.target.id === 'score') {
+                            animateScore(95);
+                            drawScoreCircle();
+                        } else if (entry.target.id === 'blockchain') {
+                            animateBlockchain();
+                        } else if (entry.target.id === 'ai') {
+                            animateRiskAnalysis();
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            observer.observe(document.getElementById('score'));
+            observer.observe(document.getElementById('blockchain'));
+            observer.observe(document.getElementById('ai'));
+        });
+    </script>
 </body>
 </html>
