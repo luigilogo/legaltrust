@@ -7,6 +7,7 @@
     <title>LegalTrust | Misura la tua integrità</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <style>
         :root {
             --primary-color: #3b5998;
@@ -168,11 +169,13 @@
             justify-content: center;
             align-items: center;
             margin: 50px 0;
-            flex-wrap: wrap;
+            flex-wrap: nowrap; /* Mantiene gli elementi su una singola riga */
+            overflow-x: auto;
+            white-space: nowrap;
         }
 
         .blockchain-node {
-            display: flex;
+            display: inline-block;
             flex-direction: column;
             align-items: center;
             text-align: center;
@@ -184,6 +187,7 @@
             transform: translateY(20px);
             transition: all 0.5s var(--transition-slow);
             margin: 10px;
+            white-space: normal;
         }
 
         .blockchain-node.active {
@@ -192,6 +196,7 @@
         }
 
         .blockchain-arrow {
+            display: inline-block;
             font-size: 2em;
             color: var(--primary-color);
             margin: 0 10px;
@@ -256,6 +261,11 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        #ai-network {
+            background-color: #2b2b2b;
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -282,11 +292,11 @@
                 <div class="score-breakdown">
                     <h3>Dettaglio del Punteggio</h3>
                     <div class="bar-container">
-                        <div class="bar-label"><span>Governance</span> <span class="score-percent">0%</span></div>
+                        <div class="bar-label"><span>Governance & Compliance</span> <span class="score-percent">0%</span></div>
                         <div class="bar"><div class="bar-fill" data-score="95"></div></div>
                     </div>
                     <div class="bar-container">
-                        <div class="bar-label"><span>Filiera</span> <span class="score-percent">0%</span></div>
+                        <div class="bar-label"><span>Tracciabilità di Filiera</span> <span class="score-percent">0%</span></div>
                         <div class="bar"><div class="bar-fill" data-score="90"></div></div>
                     </div>
                     <div class="bar-container">
@@ -299,7 +309,7 @@
                     </div>
                 </div>
             </div>
-            <p class="score-description">Un punteggio dinamico che certifica l'integrità della tua azienda.</p>
+            <p class="score-description">Un punteggio dinamico che certifica l'integrità della tua azienda, basato su un'analisi multidimensionale.</p>
         </section>
 
         <section id="blockchain" class="section">
@@ -311,31 +321,24 @@
 
         <section id="ai" class="section dark-section">
             <h2>Intelligenza Artificiale. Zero Punti Ciechi.</h2>
+            <p>La nostra IA analizza milioni di dati per mappare la tua rete di fornitori e identificare rischi nascosti.</p>
             <div class="chart-container">
-                <div class="risk-info">
-                    <h3>Analisi in Corso...</h3>
-                    <p>Scanning delle reti di fornitori in tempo reale.</p>
-                    <div class="risk-legend">
-                        <span class="dot high"></span> Alto Rischio
-                        <span class="dot medium"></span> Rischio Medio
-                        <span class="dot low"></span> Basso Rischio
-                    </div>
-                </div>
-                <canvas id="riskChart"></canvas>
+                <canvas id="ai-network"></canvas>
             </div>
         </section>
 
         <section id="bilancio" class="section">
-            <h2>Analisi di Bilancio. Oltre i Numeri.</h2>
+            <h2>Salute Finanziaria & Integrità Legale.</h2>
+            <p>Una solida governance non è solo etica, è anche un vantaggio competitivo che si riflette nei bilanci.</p>
             <div class="balance-container">
                 <div class="balance-info">
-                    <h3>Indicatori di Sostenibilità</h3>
-                    <p>Il nostro algoritmo incrocia i dati finanziari con il LegalScore per valutare la salute a lungo termine.</p>
+                    <h3>Indicatori e Interpretazione</h3>
+                    <p>La nostra analisi incrocia il **LegalScore** con gli indicatori di bilancio per fornire una visione completa della solidità aziendale.</p>
                     <div class="indicator-data">
                         <p><strong>ROE:</strong> <span class="indicator-value roe">0%</span></p>
                         <p><strong>ROI:</strong> <span class="indicator-value roi">0%</span></p>
                         <p><strong>D/E Ratio:</strong> <span class="indicator-value de-ratio">0%</span></p>
-                        <p class="analysis-comment">Analisi fittizia che mostra una correlazione tra una solida governance e indicatori finanziari sani, riducendo il rischio d'impresa.</p>
+                        <p class="analysis-comment">Un alto LegalScore (<span class="score-percent">95%</span>) è correlato a un'elevata redditività del capitale (ROE) e a una gestione efficiente del debito (D/E Ratio), dimostrando la solidità e l'affidabilità dell'azienda.</p>
                     </div>
                 </div>
                 <canvas id="balanceChart"></canvas>
@@ -357,7 +360,7 @@
                         } else if (entry.target.id === 'blockchain') {
                             animateBlockchain();
                         } else if (entry.target.id === 'ai') {
-                            animateRiskAnalysis();
+                            initAINetwork();
                         } else if (entry.target.id === 'bilancio') {
                             animateBalanceAnalysis();
                         }
@@ -371,7 +374,7 @@
             observer.observe(document.getElementById('ai'));
             observer.observe(document.getElementById('bilancio'));
 
-            // Funzioni di Animazione e Logica (rimangono invariate)
+            // Funzioni di Animazione e Logica
             
             function animateScore(finalScore) {
                 const scoreElement = document.getElementById('legalScoreValue');
@@ -392,7 +395,7 @@
                 const canvas = document.getElementById('score-canvas');
                 if (!canvas) return;
                 const ctx = canvas.getContext('2d');
-                const finalScore = parseInt(document.getElementById('legalScoreValue').dataset.finalScore, 10);
+                const finalScore = parseInt(document.getElementById('legalScoreValue').dataset.final-score, 10);
                 const radius = canvas.width / 2 - 10;
                 const endAngle = (2 * Math.PI) * (finalScore / 100);
                 let startTimestamp = null;
@@ -431,6 +434,7 @@
                     const interval = setInterval(() => {
                         if (current >= score) {
                             clearInterval(interval);
+                            percentSpan.textContent = `${score}%`; // Assicura che il valore finale sia preciso
                         } else {
                             current++;
                             percentSpan.textContent = `${current}%`;
@@ -470,51 +474,118 @@
                 });
             }
 
-            function animateRiskAnalysis() {
-                const ctx = document.getElementById('riskChart').getContext('2d');
-                if (window.riskChart) {
-                    window.riskChart.destroy();
-                }
-                const riskData = [
-                    { label: 'Basso Rischio', value: 75, color: '#4bc0c0' },
-                    { label: 'Rischio Medio', value: 23, color: '#ffcd56' },
-                    { label: 'Alto Rischio', value: 2, color: '#ff6384' }
-                ];
-                window.riskChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: riskData.map(d => d.label),
-                        datasets: [{
-                            data: riskData.map(d => d.value),
-                            backgroundColor: riskData.map(d => d.color),
-                            hoverOffset: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        aspectRatio: 1,
-                        plugins: {
-                            legend: { display: false }
-                        },
-                        cutout: '80%',
-                        animation: {
-                            animateRotate: true,
-                            animateScale: true
+            // Aggiunta libreria P5.js per la simulazione del network AI
+            function initAINetwork() {
+                const sketch = (p) => {
+                    let nodes = [];
+                    let connections = [];
+                    let riskNodes = [];
+
+                    p.setup = () => {
+                        const canvasParent = document.getElementById('ai-network').parentElement;
+                        p.createCanvas(canvasParent.offsetWidth, 400).parent('ai-network');
+                        p.noLoop();
+
+                        nodes.push(new Node(p.width / 2, p.height / 2, 'Azienda', p.color('#fff')));
+                        nodes.push(new Node(p.random(p.width / 4, p.width * 3 / 4), p.random(p.height / 4, p.height * 3 / 4), 'Fornitore 1', p.color('#4bc0c0')));
+                        nodes.push(new Node(p.random(p.width / 4, p.width * 3 / 4), p.random(p.height / 4, p.height * 3 / 4), 'Fornitore 2', p.color('#ffcd56')));
+                        nodes.push(new Node(p.random(p.width / 4, p.width * 3 / 4), p.random(p.height / 4, p.height * 3 / 4), 'Fornitore 3', p.color('#ff6384')));
+
+                        connections.push({ from: nodes[0], to: nodes[1] });
+                        connections.push({ from: nodes[0], to: nodes[2] });
+                        connections.push({ from: nodes[0], to: nodes[3] });
+                        connections.push({ from: nodes[2], to: nodes[3] }); // Connessione di rischio
+
+                        setTimeout(() => {
+                            p.loop();
+                        }, 500);
+
+                        setTimeout(() => {
+                             const infoContainer = document.querySelector('#ai .risk-info');
+                            infoContainer.innerHTML = `
+                                <h3>Analisi Approfondita</h3>
+                                <p>Il nostro algoritmo ha identificato **1 connessione ad alto rischio**.</p>
+                                <ul class="risk-list">
+                                    <li style="animation-delay: 0s;"><span class="risk-name">Fornitore 2</span>: Collegato a rete di alto rischio (Fornitore 3).</li>
+                                </ul>
+                            `;
+                            riskNodes.push(nodes[2]);
+                            riskNodes.push(nodes[3]);
+                        }, 3000);
+                    };
+
+                    p.draw = () => {
+                        p.background('#222');
+                        p.strokeWeight(1);
+                        p.stroke(200);
+
+                        for (let conn of connections) {
+                            p.line(conn.from.x, conn.from.y, conn.to.x, conn.to.y);
+                        }
+
+                        p.noStroke();
+                        for (let node of nodes) {
+                            node.display();
+                        }
+
+                        // Animazione nodi di rischio
+                        if (riskNodes.length > 0) {
+                            for (let node of riskNodes) {
+                                p.fill(p.color(255, 0, 0, 150));
+                                p.noStroke();
+                                p.ellipse(node.x, node.y, node.size * (1.2 + p.sin(p.frameCount * 0.1) * 0.1));
+                            }
+                        }
+
+                        for (let i = 0; i < nodes.length; i++) {
+                            for (let j = i + 1; j < nodes.length; j++) {
+                                let d = p.dist(nodes[i].x, nodes[i].y, nodes[j].x, nodes[j].y);
+                                let attract = (p.width * p.height) / (d * d * 100);
+                                let repel = (nodes[i].size * nodes[j].size) / (d * d);
+                                let force = attract - repel;
+                                let dx = nodes[j].x - nodes[i].x;
+                                let dy = nodes[j].y - nodes[i].y;
+                                nodes[i].vx += force * dx;
+                                nodes[i].vy += force * dy;
+                                nodes[j].vx -= force * dx;
+                                nodes[j].vy -= force * dy;
+                            }
+                            nodes[i].update();
+                        }
+                    };
+
+                    class Node {
+                        constructor(x, y, label, color) {
+                            this.x = x;
+                            this.y = y;
+                            this.vx = 0;
+                            this.vy = 0;
+                            this.size = 20;
+                            this.label = label;
+                            this.color = color;
+                        }
+
+                        update() {
+                            this.x += this.vx;
+                            this.y += this.vy;
+                            this.vx *= 0.95;
+                            this.vy *= 0.95;
+                            this.x = p.constrain(this.x, 20, p.width - 20);
+                            this.y = p.constrain(this.y, 20, p.height - 20);
+                        }
+
+                        display() {
+                            p.fill(this.color);
+                            p.ellipse(this.x, this.y, this.size);
+                            p.fill(255);
+                            p.textAlign(p.CENTER, p.CENTER);
+                            p.textSize(10);
+                            p.text(this.label, this.x, this.y + this.size / 2 + 5);
                         }
                     }
-                });
+                };
 
-                setTimeout(() => {
-                    const infoContainer = document.querySelector('.risk-info');
-                    infoContainer.innerHTML = `
-                        <h3>Analisi Approfondita</h3>
-                        <p>Il nostro algoritmo ha identificato <strong>2 fornitori</strong> ad alto rischio:</p>
-                        <ul class="risk-list">
-                            <li style="animation-delay: 0s;"><span class="risk-name">Fornitore Omega S.r.l.</span>: Collegamento a società offshore.</li>
-                            <li style="animation-delay: 0.2s;"><span class="risk-name">Logistica Beta Inc.</span>: Transazioni anomale con un'azienda sotto indagine per frode fiscale.</li>
-                        </ul>
-                    `;
-                }, 2500);
+                new p5(sketch);
             }
 
             function animateBalanceAnalysis() {
@@ -546,7 +617,7 @@
                     window.balanceChart.destroy();
                 }
                 const data = {
-                    labels: ['Governance', 'LegalScore', 'Fiducia Investitori'],
+                    labels: ['Governance', 'LegalScore', 'Performance Finanziaria'],
                     datasets: [{
                         label: 'Correlazione',
                         data: [95, 95, 85],
