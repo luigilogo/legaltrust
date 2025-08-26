@@ -3,27 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tracciamento Medicine Nonno</title>
+    <title>LegalTrust | Misura la tua legalità</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>Tracciamento Medicine</h1>
-        <div class="medicine-item">
-            <h2>Medicina A</h2>
-            <p>Quantità rimanente: <span id="medA-quantity">14</span> pillole</p>
-            <button onclick="decrementQuantity('medA')">Prendi</button>
-            <div id="medA-alert" class="alert-message"></div>
-        </div>
 
-        <div class="medicine-item">
-            <h2>Medicina B</h2>
-            <p>Quantità rimanente: <span id="medB-quantity">7</span> pillole</p>
-            <button onclick="decrementQuantity('medB')">Prendi</button>
-            <div id="medB-alert" class="alert-message"></div>
-        </div>
-    </div>
+    <header class="header">
+        <div class="logo">LegalTrust</div>
+        <nav class="nav">
+            <a href="#score">Score</a>
+            <a href="#blockchain">Trasparenza</a>
+            <a href="#ai">Analisi AI</a>
+        </nav>
+    </header>
 
-    <script src="script.js"></script>
+    <section id="score" class="hero-section">
+        <h1>Il tuo LegalScore. La tua Garanzia.</h1>
+        <div class="score-container">
+            <div id="legalScore" class="score-circle" data-score="95">
+                <span class="score-value">0</span>
+                <p class="score-label">LegalScore™</p>
+            </div>
+        </div>
+        <p class="score-description">Un punteggio dinamico che certifica l'integrità della tua azienda.</p>
+    </section>
+
+    <section id="blockchain" class="section">
+        <h2>Trasparenza Immutabile.</h2>
+        <p>Ogni transazione della filiera, un blocco di fiducia.</p>
+        <div class="blockchain-animation">
+            <div class="block-node active">
+                <div class="icon">🌱</div>
+                <p>Origine</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="block-node">
+                <div class="icon">🚜</div>
+                <p>Raccolta</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="block-node">
+                <div class="icon">📦</div>
+                <p>Trasporto</p>
+            </div>
+            <div class="arrow">→</div>
+            <div class="block-node">
+                <div class="icon">🏛️</div>
+                <p>Certificazione</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="ai" class="section dark-section">
+        <h2>Intelligenza Artificiale. Zero Punti Ciechi.</h2>
+        <div class="chart-container">
+            <canvas id="riskChart"></canvas>
+            <div class="risk-info">
+                <h3>Analisi dei Fornitori</h3>
+                <p>Il nostro algoritmo ha identificato una rete di rischio potenziale con il <strong>2%</strong> dei tuoi fornitori.</p>
+                <div class="risk-legend">
+                    <span class="dot high"></span> Alto Rischio
+                    <span class="dot medium"></span> Rischio Medio
+                    <span class="dot low"></span> Basso Rischio
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <script src="app.js"></script>
+
 </body>
 </html>
