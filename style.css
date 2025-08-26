@@ -1,11 +1,12 @@
 :root {
-    --primary-color: #2e8b57;
-    --secondary-color: #f0f0f0;
-    --dark-bg: #1c1c1c;
+    --primary-color: #3b5998; /* Un blu più professionale */
+    --secondary-color: #f7f7f7;
     --text-color: #333;
     --light-text: #fff;
-    --gradient-hero: linear-gradient(45deg, #1f4037, #99f2c8);
+    --gradient-bg: linear-gradient(135deg, #3b5998, #8b9dc3);
     --shadow-effect: 0 10px 30px rgba(0, 0, 0, 0.1);
+    --transition-fast: 0.3s ease-in-out;
+    --transition-slow: 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 body {
@@ -18,20 +19,20 @@ body {
     scroll-behavior: smooth;
 }
 
-/* Header */
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px 5%;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     box-shadow: var(--shadow-effect);
     position: sticky;
     top: 0;
     z-index: 100;
 }
 
-/* Hero Section */
+/* Sezione Hero con animazione sfondo */
 .hero-section {
     min-height: 100vh;
     display: flex;
@@ -39,33 +40,53 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    background: var(--gradient-hero);
+    background: var(--gradient-bg);
     color: var(--light-text);
     padding: 20px;
-}
-
-.score-container {
-    margin: 40px 0;
     position: relative;
-    width: 250px;
-    height: 250px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    overflow: hidden;
 }
 
-.score-circle {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.2);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 4em;
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent, transparent);
+    animation: flow 15s linear infinite;
+    z-index: 1;
+}
+
+@keyframes flow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Sezione Score */
+.score-wrapper {
+    position: relative;
+    width: 280px;
+    height: 280px;
+    margin: 40px auto;
+}
+
+#score-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.score-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5em;
     font-weight: 700;
-    transition: transform 0.5s ease-in-out;
 }
 
 /* Sezione Blockchain */
@@ -74,65 +95,50 @@ body {
     justify-content: center;
     align-items: center;
     margin: 50px 0;
+    flex-wrap: wrap;
 }
 
-.block-node {
+.blockchain-node {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     background-color: var(--secondary-color);
-    padding: 20px;
+    padding: 25px;
     border-radius: 10px;
     box-shadow: var(--shadow-effect);
-    opacity: 0.3;
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s var(--transition-slow);
+    margin: 10px;
 }
 
-.block-node.active {
+.blockchain-node.active {
     opacity: 1;
-    transform: scale(1.1);
+    transform: translateY(0);
 }
 
-.arrow {
+.blockchain-arrow {
     font-size: 2em;
-    margin: 0 15px;
+    color: var(--primary-color);
+    margin: 0 10px;
     animation: pulse 1s infinite alternate;
 }
 
-@keyframes pulse {
-    from { transform: scale(1); opacity: 0.7; }
-    to { transform: scale(1.1); opacity: 1; }
-}
-
-/* Sezione AI */
-.dark-section {
-    background-color: var(--dark-bg);
-    color: var(--light-text);
-}
+/* Resto del CSS per le sezioni AI e generiche */
+.section { padding: 80px 5%; text-align: center; }
+.dark-section { background-color: #222; color: var(--light-text); }
 
 .chart-container {
-    max-width: 800px;
+    max-width: 900px;
     margin: 50px auto;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 40px;
 }
-
-.risk-info {
-    max-width: 300px;
-    text-align: left;
-}
-
-.dot {
-    height: 15px;
-    width: 15px;
-    border-radius: 50%;
-    display: inline-block;
-    margin-right: 5px;
-}
-
+.risk-info { text-align: left; }
+.dot { height: 15px; width: 15px; border-radius: 50%; display: inline-block; margin-right: 5px; }
 .dot.high { background-color: #ff6384; }
 .dot.medium { background-color: #ffcd56; }
 .dot.low { background-color: #4bc0c0; }
